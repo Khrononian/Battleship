@@ -3,33 +3,31 @@ const CreateBattleShips = (shipName, length) => {
         shipName,
         length, 
         sunk: false,
-        location: [0, 1, 2, 3, 4], // USE PLACEMENT OF SHIP TO CALCULATE LOCATION, ALSO CHANGE LOCATION TO PARAMETER
+        location: [], // USE PLACEMENT OF SHIP TO CALCULATE LOCATION, ALSO CHANGE LOCATION TO PARAMETER
         hit(num) {
-            console.log(this.location, 'Food')
+            const positionArray = [];
             const numIndex = this.location.indexOf(num)
-            if (this.location.indexOf(num) !== -1) {
-                console.log('FOUND', num, numIndex)
+
+            if (numIndex && num) {
+                this.location.push(num)
                 this.location.splice(numIndex, 1, 'X')
-                console.log('Changed', this.location)
             }
-            else console.log(num)
             
-            return num
+            return this.location
         },
         isSunk() {
-            const locate = this.location;
-
-            if (locate.every(x => x === 'X')) return this.sunk = true;
-            else return false;
-        }
+            if (this.location.every(x => x === 'X') && this.location.length === length) return this.sunk = true;
+            else return this.sunk = false;
+        },
     }
-
 }
 const ship = CreateBattleShips('Carrier', 5, false);
-console.log(ship, ship.hit(5), ship.isSunk(), ship.sunk) // Works
-setInterval(() => {
-    console.log('Test', ship, ship.hit())
-},2500)
+
+const carrier = CreateBattleShips('Carrier', 5, false);
+const battleShip = CreateBattleShips('Battle Ship', 4, false);
+const destroyer = CreateBattleShips('Destroyer', 3, false);
+const submarine = CreateBattleShips('Submarine', 3, false);
+const patrolBoat = CreateBattleShips('Patrol Boat', 2, false);
 
 export default CreateBattleShips
-export { ship }
+export { ship, carrier, battleShip, destroyer, submarine, patrolBoat }
