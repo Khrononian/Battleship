@@ -37,6 +37,10 @@ h3 {
     border: 1px solid #999;
 }
 
+.grid-cell {
+    border: 1px solid #999;
+}
+
 .enemy-waters {
     cursor: pointer;
 }
