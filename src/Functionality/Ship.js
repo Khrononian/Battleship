@@ -5,7 +5,6 @@ const CreateBattleShips = (shipName, length) => {
         sunk: false,
         location: [], // USE PLACEMENT OF SHIP TO CALCULATE LOCATION, ALSO CHANGE LOCATION TO PARAMETER
         hit(num) {
-            const positionArray = [];
             const numIndex = this.location.indexOf(num)
 
             if (numIndex && num) {
@@ -16,7 +15,7 @@ const CreateBattleShips = (shipName, length) => {
             return this.location
         },
         isSunk() {
-            if (this.location.every(x => x === 'X') && this.location.length === length) return this.sunk = true;
+            if (this.location.every(x => x === 'X') && this.location.length === this.length) return this.sunk = true;
             else return this.sunk = false;
         },
     }

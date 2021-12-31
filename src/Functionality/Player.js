@@ -1,27 +1,18 @@
-
+import { getGridPosition, allyWaters } from './Dom'
 
 const Player = () => {
     return {
-        realPlayer(playerTurn) {
-            if (playerTurn) return true
-            else return false;
+        gamePlayer(playerTurn) {
+            return playerTurn
         },
         computerAi(computerTurn) {
-        const div = document.querySelectorAll('.grid-enemy');    
-            if (this.realPlayer(computerTurn) === false) {
-                // RANDOMLY SELECT GRID CELL AFTER PLAYER'S TURN IS OVER
-                // USE THE DOM FUNCTIONALITY TO CALL THE COMPUTER METHOD
-
-                
-
-                for (let i = 0; i < div.length; i++) {
-                    // USE MATH RANDOM TO SELECT A RANDOM DIV
-                    // USE METHODS/FUNCTIONS TO FIND WHERE BOATS ARE
-
-
-                }
-            }
-        
+    
+            // RANDOMLY SELECT GRID CELL AFTER PLAYER'S TURN IS OVER
+            // USE THE DOM FUNCTIONALITY TO CALL THE COMPUTER METHOD
+            // USE MATH RANDOM TO SELECT A RANDOM DIV
+            // USE METHODS/FUNCTIONS TO FIND WHERE BOATS ARE
+            
+            return computerTurn
         }
     }
 }

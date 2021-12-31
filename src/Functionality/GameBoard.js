@@ -3,17 +3,18 @@ import { carrier, battleShip, destroyer, submarine, patrolBoat } from '../Functi
 
 const GameBoard = () => {
     return {
+        gameEnded: false,
         missedShots: [],
         shipPlacement() {
 
         },
-        receiveAttack(coordinates, findAttack, findNum) {
-
+        receiveAttack(coordinates, determineAttack, findNum) {
 
             // COORDINATE PARAMETER TAKES THE X/Y VALUES
             // CHECK IF FINDNUM PARAMETER CAN FIND THE NUMBER WITHIN HIT FUNCTION
             // POTENTIALLY USE ONLY COORDINATE PARAMETER TO PASS IT INTO THE HIT FUNCTION
-            if (coordinates && findAttack === 'Ship') {
+            if (coordinates && determineAttack === 'Ship') {
+                console.log('Hi there', coordinates)
                 return CreateBattleShips().hit(coordinates)
             }
             else {
@@ -25,11 +26,10 @@ const GameBoard = () => {
 
             return this.missedShots;
         },
-        checkAllShipConditions() {
-            if (carrier.sunk === true && battleShip.sunk === true && destroyer.sunk === true
-            && submarine.sunk === true && patrolBoat.sunk === true) {
-                return 'All ships sunk'
-            } else return 'All ships havent sunk'
+        checkAllShipConditions(alliedShips, enemyShips) {
+            if (alliedShips === 5) return 'All allied ships sunk' 
+            else if (enemyShips === 5) return 'All enemy ships sunk'
+            else return 'All enemy ships havent sunk' || 'All allied ships havent sunk'
         }
     }
 }
