@@ -2,8 +2,6 @@ import CreateBattleShips from '../Functionality/Ship'
 import { carrier, battleShip, destroyer, submarine, patrolBoat } from '../Functionality/Ship'
 
 describe('All about the ships', () => {
-
-    // CHECK LENGTH
     test('Check ship length', () => {
         expect(carrier.length).toBe(5)
         expect(battleShip.length).toBe(4)
@@ -12,7 +10,6 @@ describe('All about the ships', () => {
         expect(patrolBoat.length).toBe(2)
     }) 
 
-    // CHECK IF SUNK
     test('Calculate function based on length and whether all positions are hit', () => {
         expect(carrier.isSunk()).toBe(false)
         expect(battleShip.isSunk()).toBe(false)
@@ -21,7 +18,6 @@ describe('All about the ships', () => {
         expect(patrolBoat.isSunk()).toBe(false)
     })
 
-    // CHECK HIT
     test('Hit function takes a number and then marks that position as hit', () => {
         expect(CreateBattleShips().hit([0, 5])).toContain('X')
     })
