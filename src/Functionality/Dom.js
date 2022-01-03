@@ -6,7 +6,7 @@ const rice = 'Mans'
 const enemyWaters = document.querySelector('.enemy-waters');
 const allyWaters = document.querySelector('.allied-waters');
 const shipZone = document.querySelector('.ship-zone');
-const dropZone = document.querySelector('.zone');
+const shipBlocks = document.querySelector('.ship-block');
 const getShipPositions = GameBoard()
 const getPlayerType = Player()
 const array = [];
@@ -19,42 +19,78 @@ const loadGridBlocks = () => { // WORK ON GETTING COORDINATES
 
         enemyDivs.classList.add('grid-cell')
         enemyDivs.classList.add('grid-enemy')
+
         enemyDivs.addEventListener('mouseover', hoverGridCell)
         enemyDivs.addEventListener('click', clickGridCell)
         enemyDivs.addEventListener('mouseout', hoverOutGridCell)
-        
+        shipDivs.addEventListener('mouseover', hoverShipPlacements)
+        shipDivs.addEventListener('mouseout', hoverOutShipPlacements)
+        shipDivs.addEventListener('click', clickShipPlacement);
         
         enemyWaters.append(enemyDivs)
         allyDivs.classList.add('grid-ally');
         allyWaters.append(allyDivs);
         enemyDivs.style.cursor = 'pointer'
         shipZone.append(shipDivs)
+        shipDivs.classList.add('grid-ships')
+        shipBlocks.style.visibility = 'unset'
+        shipZone.append(shipBlocks)
 
         enemyDivs.dataset.row = getGridPosition(enemyWaters, getElementIndex(enemyDivs)).row;
         enemyDivs.dataset.column = getGridPosition(enemyWaters, getElementIndex(enemyDivs)).column;
         allyDivs.dataset.row = getGridPosition(allyWaters, getElementIndex(allyDivs)).row;
         allyDivs.dataset.column = getGridPosition(allyWaters, getElementIndex(allyDivs)).column;
+        shipDivs.dataset.row = getGridPosition(shipZone, getElementIndex(shipDivs)).row;
+        shipDivs.dataset.column = getGridPosition(shipZone, getElementIndex(shipDivs)).column;
         allyDivs.dataset.shot = false;
     }
 }
 
-const dropDownShips = (event) => {
-    console.log(event.currentTarget)
-    event.currentTarget.style.opacity = 1
-}
-document.querySelector('.carrier').addEventListener('ondragstart', dropDownShips)
+const hoverShipPlacements = event => {
+    
+    shipBlocks.style.display = 'grid'
+    shipBlocks.style.left = (event.target.offsetLeft) + 'px' // WORKS
+    shipBlocks.style.top = (event.target.offsetTop) + 'px' // WORKS
 
-const allowDrop = (event) => {
-    console.log(event)
-    event.preventDefault()
+    
 }
-const drop = (event) => {
-    console.log(event)
-    event.preventDefault()
-    event.target.append(document)
+
+const clickShipPlacement = event => {
+    const elementSibling = event.target
+
+    console.log('Checks', elementSibling.dataset.row)
+    // CHECK THE CLICKED BLOCK BASED OFF THE ROW OR COLUMN
+    for (let i = 0; i < enemyWaters.children.length; i++) {
+
+        console.log('Check length', enemyWaters.children.length)
+        if (elementSibling.dataset.row === enemyWaters.children[i].dataset.row
+        && enemyWaters.children[i].dataset.column >= elementSibling.dataset.column
+        && enemyWaters.children[i].dataset.column < carrier.length) { // WORKS
+            
+            console.log('Find rows', enemyWaters.children[i].dataset.row)
+            console.log('First', enemyWaters.children[i], i)
+            console.log('Find clicked row', elementSibling.dataset.row, elementSibling.dataset.column)
+            enemyWaters.children[i].style.background = 'red'
+        } else if (enemyWaters.children[i].dataset.column > carrier.length) {
+            enemyWaters.children[i].style.background = 'red'
+        }
+
+        // TRY USING THE ELEMENT SIBLINGS OF THE SHIP THAT WILL BE PLACED
+
+    }
+
+    
 }
-dropZone.addEventListener('ondragover', allowDrop)
-dropZone.addEventListener('ondrop', drop)
+
+const hoverOutShipPlacements = event => {
+    shipBlocks.style.display = 'none'
+}
+
+const createShipLength = (length) => {
+    for (let i = 0; i < length; i++) {
+        const div = createElement('div');
+    }
+}
 
 const getGridPosition = (parent, index) => {
     let offset = Number(window.getComputedStyle(parent.children[0]).gridColumnStart) - 1;
@@ -75,7 +111,7 @@ const getElementIndex = (element) => {
 }
 
 const hoverGridCell = (event) => {
-    const shipBlocks = document.querySelector('.ship-block');
+    
 
     event.target.style.background = '#3232';
     ship.hit(Number(event.target.innerText)) // Not sure what this is, check later
@@ -86,8 +122,6 @@ const hoverGridCell = (event) => {
     const logPositions = getGridPosition(enemyWaters, getElementIndex(event.target))
 
     
-    shipBlocks.style.left = (event.target.offsetLeft) + 'px' // WORKS
-    shipBlocks.style.top = (event.target.offsetTop) + 'px' // WORKS
 
     console.log('Event hover', event, event.target.nextElementSibling, event.target.offsetTop)
     // USE getShipPositions to find the receivedattacks coordinates
