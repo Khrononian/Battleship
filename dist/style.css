@@ -66,28 +66,15 @@ h3 {
     pointer-events: none;
 }
 
-.ship-block {
-    position: absolute;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    background: #303030;
-    width: 198px;
-    height: 36px;
-    pointer-events: none;
-}
-
-.grid-styles {
-    border: 1px solid #121212;
-}
-
 .contain-ships {
     position: absolute;
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
     min-height: 100%;
     background: #303030;
-    opacity: .95;
+    opacity: .75;
     top: 0;
     bottom: 0;
     left: 0;
@@ -95,56 +82,38 @@ h3 {
     z-index: 2;
 }
 
+header, .contain {
+    filter: blur(4px);
+}
+
+.overlay {
+    text-align: center;
+}
+
+p {
+    margin: 1rem 0;
+    font-size: 1.45rem;
+}
+
 .ship-zone {
-    margin: 0 auto;
+    position: relative;
 }
 
-.ship-list {
-    display: flex;
-    flex-direction: column;
-    width: 250px;
-    height: 400px;
-    background: red;
-    margin-left: 2rem;
-    padding: 1.5em;
-}
-
-span {
-    margin-bottom: .6rem;
-    color: white;
-}
-
-.ship-grid {
+.ship-block {
+    position: absolute;
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    height: 65px;
+    background: red;
+    width: 198px;
+    height: 36px;
+    pointer-events: none;
+    visibility: hidden;
 }
 
-.carrier {
-    grid-template-columns: repeat(5, 1fr);
-}
-
-.battle-ship {
-    grid-template-columns: repeat(4, 1fr);
-    width: 165px;
-}
-
-.destroyer {
-    grid-template-columns: repeat(3, 1fr);
-    width: 120px;
-}
-
-.submarine {
-    grid-template-columns: repeat(3, 1fr);
-    width: 120px
-}
-
-.patrol-boat {
-    grid-template-columns: repeat(2, 1fr);
-    width: 80px;
-}
-
-.ship-grid > * {
+.grid-styles {
     border: 1px solid #121212;
-    background: #303030;
+}
+
+.grid-ships {
+    cursor: pointer;
 }
