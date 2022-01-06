@@ -101,7 +101,6 @@ p {
 
 .ship-block {
     position: absolute;
-    display: grid;
     grid-template-columns: repeat(5, 1fr);
     background: red;
     width: 198px;

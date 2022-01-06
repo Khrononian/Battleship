@@ -9,6 +9,7 @@ const shipZone = document.querySelector('.ship-zone');
 const shipBlocks = document.querySelector('.ship-block');
 const getShipPositions = GameBoard()
 const getPlayerType = Player()
+const shipArray = ['Carrier', 'Battle Ship', 'Destroyer', 'Submarine', 'Patrol Boat']
 const array = [];
 
 const loadGridBlocks = () => { // WORK ON GETTING COORDINATES
@@ -36,12 +37,12 @@ const loadGridBlocks = () => { // WORK ON GETTING COORDINATES
         shipBlocks.style.visibility = 'unset'
         shipZone.append(shipBlocks)
 
-        enemyDivs.dataset.row = getGridPosition(enemyWaters, getElementIndex(enemyDivs)).row;
-        enemyDivs.dataset.column = getGridPosition(enemyWaters, getElementIndex(enemyDivs)).column;
-        allyDivs.dataset.row = getGridPosition(allyWaters, getElementIndex(allyDivs)).row;
-        allyDivs.dataset.column = getGridPosition(allyWaters, getElementIndex(allyDivs)).column;
-        shipDivs.dataset.row = getGridPosition(shipZone, getElementIndex(shipDivs)).row;
-        shipDivs.dataset.column = getGridPosition(shipZone, getElementIndex(shipDivs)).column;
+        enemyDivs.dataset.row = Number(getGridPosition(enemyWaters, getElementIndex(enemyDivs)).row);
+        enemyDivs.dataset.column = Number(getGridPosition(enemyWaters, getElementIndex(enemyDivs)).column);
+        allyDivs.dataset.row = Number(getGridPosition(allyWaters, getElementIndex(allyDivs)).row);
+        allyDivs.dataset.column = Number(getGridPosition(allyWaters, getElementIndex(allyDivs)).column);
+        shipDivs.dataset.row = Number(getGridPosition(shipZone, getElementIndex(shipDivs)).row);
+        shipDivs.dataset.column = Number(getGridPosition(shipZone, getElementIndex(shipDivs)).column);
         allyDivs.dataset.shot = false;
     }
 }
@@ -49,41 +50,84 @@ const loadGridBlocks = () => { // WORK ON GETTING COORDINATES
 const hoverShipPlacements = event => {
     
     shipBlocks.style.display = 'grid'
-    shipBlocks.style.left = (event.target.offsetLeft) + 'px' // WORKS
-    shipBlocks.style.top = (event.target.offsetTop) + 'px' // WORKS
+    shipBlocks.style.left = (event.target.offsetLeft) + 'px'
+    shipBlocks.style.top = (event.target.offsetTop) + 'px'
 
+    if (shipBlocks.children[0] !== undefined) shipBlocks.children[0].dataset.row = event.target.dataset.row
+    else return
     
-}
-
-const clickShipPlacement = event => {
-    const elementSibling = event.target
-
-    console.log('Checks', elementSibling.dataset.row)
-    // CHECK THE CLICKED BLOCK BASED OFF THE ROW OR COLUMN
-    for (let i = 0; i < enemyWaters.children.length; i++) {
-
-        console.log('Check length', enemyWaters.children.length)
-        if (elementSibling.dataset.row === enemyWaters.children[i].dataset.row
-        && enemyWaters.children[i].dataset.column >= elementSibling.dataset.column
-        && enemyWaters.children[i].dataset.column < carrier.length) { // WORKS
-            
-            console.log('Find rows', enemyWaters.children[i].dataset.row)
-            console.log('First', enemyWaters.children[i], i)
-            console.log('Find clicked row', elementSibling.dataset.row, elementSibling.dataset.column)
-            enemyWaters.children[i].style.background = 'red'
-        } else if (enemyWaters.children[i].dataset.column > carrier.length) {
-            enemyWaters.children[i].style.background = 'red'
-        }
-
-        // TRY USING THE ELEMENT SIBLINGS OF THE SHIP THAT WILL BE PLACED
-
+    for (let i = 0; i < shipBlocks.children.length; i++) {
+        if (!shipBlocks.children[i].dataset.column) shipBlocks.children[i].dataset.column = event.target.dataset.column++
+        else if (event.target.dataset.column !== 10 ) shipBlocks.children[i].dataset.column = event.target.dataset.column++
+        else return
     }
-
-    
+    event.target.dataset.column--
 }
 
 const hoverOutShipPlacements = event => {
     shipBlocks.style.display = 'none'
+
+    for (let i = 0; i < shipBlocks.children.length; i++) {
+        if (event.target.dataset.column !== -1) shipBlocks.children[i].dataset.column = event.target.dataset.column--
+        else return
+    }
+    event.target.dataset.column++
+}
+
+const clickShipPlacement = event => {
+    const elementSibling = event.target
+    
+
+    
+    switch (shipArray[0]) {
+        case carrier.shipName:
+            console.log('Carrier works');
+
+            break;
+        case battleShip.shipName:
+            console.log('Battleship works');
+            shipBlocks.style.width = (shipBlocks.offsetWidth - 40)+ 'px'
+
+
+            break;
+        case destroyer.shipName:
+            console.log('Destroyer works');
+            shipBlocks.style.gridTemplateColumns = `repeat(3, 1fr)`
+
+            break;
+        case submarine.shipName:
+            console.log('Submarine works');
+            shipBlocks.style.width = (shipBlocks.offsetWidth - 40)+ 'px'
+            break;
+        case patrolBoat.shipName:
+            console.log('Patrol Boat')
+            break;
+    }
+    
+    
+    for (let i = 0; i < enemyWaters.children.length; i++) {
+        for (let j = 0; j < shipBlocks.children.length; j++) {
+            console.log('Block position', shipBlocks.children[j], shipBlocks.children[j].offsetTop, shipBlocks.children[j].offsetLeft)
+
+            if (shipBlocks.children[0].dataset.row == enemyWaters.children[i].dataset.row
+            && enemyWaters.children[i].dataset.column == shipBlocks.children[j].dataset.column) {
+                console.log('Found it', enemyWaters.children[i], shipBlocks.children[j].dataset.column, enemyWaters.children[i].dataset.column)
+                enemyWaters.children[i].style.background = 'red'
+            }
+        }
+    }
+    if (shipArray[0] == carrier.shipName) {
+        shipBlocks.removeChild(shipBlocks.lastElementChild);
+        shipBlocks.style.gridTemplateColumns = `repeat(4, 1fr)`
+        shipBlocks.style.width = (shipBlocks.offsetWidth - 40)+ 'px'
+    } else if (shipArray[0] == battleShip.shipName) {
+        shipBlocks.removeChild(shipBlocks.lastElementChild);
+        shipBlocks.style.gridTemplateColumns = `repeat(3, 1fr)`
+
+    }
+
+    
+    shipArray.splice(0, 1)
 }
 
 const createShipLength = (length) => {
