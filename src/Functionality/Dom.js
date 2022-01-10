@@ -48,10 +48,10 @@ const loadGridBlocks = () => { // WORK ON GETTING COORDINATES
 }
 
 const hoverShipPlacements = event => {
-    
     shipBlocks.style.display = 'grid'
     shipBlocks.style.left = (event.target.offsetLeft) + 'px'
     shipBlocks.style.top = (event.target.offsetTop) + 'px'
+    shipBlocks.lastElementChild.style.border = 'transparent'
 
     if (shipBlocks.children[0] !== undefined) shipBlocks.children[0].dataset.row = event.target.dataset.row
     else return
@@ -75,47 +75,31 @@ const hoverOutShipPlacements = event => {
 }
 
 const clickShipPlacement = event => {
-    const elementSibling = event.target
-    
+    if (shipBlocks.lastElementChild.dataset.column < 10 && event.target.style.background != 'red' 
+    && enemyWaters.children[Math.floor(Math.random() * enemyWaters.childElementCount)].style.background != 'red' ) placePlayerShips()
 
-    
-    switch (shipArray[0]) {
-        case carrier.shipName:
-            console.log('Carrier works');
-
-            break;
-        case battleShip.shipName:
-            console.log('Battleship works');
-            shipBlocks.style.width = (shipBlocks.offsetWidth - 40)+ 'px'
-
-
-            break;
-        case destroyer.shipName:
-            console.log('Destroyer works');
-            shipBlocks.style.gridTemplateColumns = `repeat(3, 1fr)`
-
-            break;
-        case submarine.shipName:
-            console.log('Submarine works');
-            shipBlocks.style.width = (shipBlocks.offsetWidth - 40)+ 'px'
-            break;
-        case patrolBoat.shipName:
-            console.log('Patrol Boat')
-            break;
-    }
-    
-    
-    for (let i = 0; i < enemyWaters.children.length; i++) {
+    console.log('Find sibling', shipBlocks, shipBlocks.nextElementSibling)
+    console.log('Check row upper', event.target.dataset.row, event.target.dataset.row++)
+    for (let i = 0; i < allyWaters.children.length; i++) {
         for (let j = 0; j < shipBlocks.children.length; j++) {
-            console.log('Block position', shipBlocks.children[j], shipBlocks.children[j].offsetTop, shipBlocks.children[j].offsetLeft)
-
-            if (shipBlocks.children[0].dataset.row == enemyWaters.children[i].dataset.row
-            && enemyWaters.children[i].dataset.column == shipBlocks.children[j].dataset.column) {
-                console.log('Found it', enemyWaters.children[i], shipBlocks.children[j].dataset.column, enemyWaters.children[i].dataset.column)
-                enemyWaters.children[i].style.background = 'red'
+            if (shipBlocks.children[0].dataset.row == allyWaters.children[i].dataset.row
+            && allyWaters.children[i].dataset.column == shipBlocks.children[j].dataset.column
+            ) {
+                allyWaters.children[i].style.background = 'red'
+                allyWaters.children[i].dataset.ship = shipArray[0];
+                event.target.style.background = 'red'
+            }
+            for (let k = 0; k < shipZone.children.length; k++) {
+                if (shipBlocks.children[0].dataset.row == shipZone.children[k].dataset.row &&
+                shipBlocks.children[j].dataset.column == shipZone.children[k].dataset.column )  {
+                    shipZone.children[k].style.background = 'red'
+                    shipZone.children[k].dataset.ship = shipArray[0]
+                }
             }
         }
     }
+
+    
     if (shipArray[0] == carrier.shipName) {
         shipBlocks.removeChild(shipBlocks.lastElementChild);
         shipBlocks.style.gridTemplateColumns = `repeat(4, 1fr)`
@@ -123,16 +107,97 @@ const clickShipPlacement = event => {
     } else if (shipArray[0] == battleShip.shipName) {
         shipBlocks.removeChild(shipBlocks.lastElementChild);
         shipBlocks.style.gridTemplateColumns = `repeat(3, 1fr)`
-
-    }
-
+    } else if (shipArray[0] == submarine.shipName) shipBlocks.removeChild(shipBlocks.lastElementChild);
     
-    shipArray.splice(0, 1)
+    if (shipArray.length !== 1) shipArray.splice(0, 1)
+    else {
+        document.querySelector('.contain').style.filter = 'none'
+        document.querySelector('header').style.filter = 'none'
+        document.querySelector('.contain-ships').remove();
+    }
 }
 
-const createShipLength = (length) => {
-    for (let i = 0; i < length; i++) {
-        const div = createElement('div');
+const placePlayerShips = () => {
+    switch (shipArray[0]) {
+        case carrier.shipName:
+            console.log('Carrier works');
+            createComputerShips(carrier.length - 1)
+
+            break;
+        case battleShip.shipName:
+            console.log('Battleship works');
+            shipBlocks.style.width = (shipBlocks.offsetWidth - 40)+ 'px'
+            createComputerShips(battleShip.length - 1)
+
+            break;
+        case destroyer.shipName:
+            console.log('Destroyer works');
+            shipBlocks.style.gridTemplateColumns = `repeat(3, 1fr)`
+            createComputerShips(destroyer.length - 1)
+
+            break;
+        case submarine.shipName:
+            console.log('Submarine works');
+            shipBlocks.style.width = (shipBlocks.offsetWidth - 40)+ 'px'
+            shipBlocks.style.gridTemplateColumns = `repeat(2, 1fr)`
+            createComputerShips(submarine.length - 1)
+
+            break;
+        case patrolBoat.shipName:
+            console.log('Patrol Boat');
+            
+            createComputerShips(patrolBoat.length - 1)
+
+            break;
+    }
+}
+
+const createComputerShips = (shipInfo) => {
+    const randomPlacement = Math.floor(Math.random() * enemyWaters.childElementCount);
+    let previousGrid = enemyWaters.children[randomPlacement].previousElementSibling
+    let nextGrid = enemyWaters.children[randomPlacement].nextElementSibling
+    let j = 0;
+    let shipLength = 0;
+
+    
+    if (enemyWaters.children[randomPlacement].style.background != 'red' &&  Number(enemyWaters.children[randomPlacement].dataset.column) + shipInfo + 1 <= 10
+    && enemyWaters.children[randomPlacement].dataset.ship != shipArray[0]
+    ) {
+        enemyWaters.children[randomPlacement].dataset.ship = shipArray[0];
+        
+    } else {
+        console.log('Else Find array', shipArray)
+        createComputerShips(shipInfo)
+        return
+    }
+    console.log('Check placement array', shipArray)
+    
+    console.log('Random check', enemyWaters.children[randomPlacement].dataset.row, enemyWaters.children[randomPlacement].dataset.column)
+    
+    // TRY TO MAKE RANDOM PLACEMENTS ALLOW SPACE FOR LENGTH OF SHIP TO BE PLACED
+    for (let i = 0; i < enemyWaters.children.length; i++) {
+
+        if (enemyWaters.children[i].dataset.ship == shipArray[0]) enemyWaters.children[i].style.background = 'red'
+        
+
+        console.log('Inner sibling', shipLength, Number(enemyWaters.children[randomPlacement].dataset.column) + shipInfo + 1, shipInfo + 1)
+        while (j != shipInfo && nextGrid) {
+            console.log('Sibling', nextGrid, shipLength)
+            if (nextGrid.style.background != 'red' && enemyWaters.children[randomPlacement].dataset.row == nextGrid.dataset.row
+            ) {
+                
+                j++
+            } else {
+                createComputerShips(shipInfo)
+                return
+            }
+            
+            nextGrid.dataset.ship = shipArray[0]
+            
+            nextGrid = nextGrid.nextElementSibling
+            
+        }
+        
     }
 }
 
@@ -155,8 +220,6 @@ const getElementIndex = (element) => {
 }
 
 const hoverGridCell = (event) => {
-    
-
     event.target.style.background = '#3232';
     ship.hit(Number(event.target.innerText)) // Not sure what this is, check later
     console.log('Find', event.target.innerText) 
@@ -195,10 +258,6 @@ const clickGridCell = (event) => {
 
     console.log('Check receives', getShipPositions.receiveAttack(getPlayerType.computerAi(randomSelectionCheck(array))))
     console.log('Check enemy coordinates', getShipPositions.receiveAttack(getPlayerType.gamePlayer(enemyBoardCoordinates)))
-
-    // GET THE ALLIED WATERS COORDINATES
-    // USE RANDOMSELECTIONCHECK FUNCTION FOR ALLY COORDINATES
-    // USE randomSelectionCheck TO GET THE ROW AND COLUMN
 }
 
 const randomSelectionCheck = (array) => { // ALLY TARGETS
