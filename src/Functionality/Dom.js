@@ -48,38 +48,91 @@ const loadGridBlocks = () => { // WORK ON GETTING COORDINATES
 }
 
 const hoverShipPlacements = event => {
+    let shipArrayInfo = shipArray[0]
+
     shipBlocks.style.display = 'grid'
     shipBlocks.style.left = (event.target.offsetLeft) + 'px'
     shipBlocks.style.top = (event.target.offsetTop) + 'px'
     shipBlocks.lastElementChild.style.border = 'transparent'
+    
+
+    console.log('Previos Ship placement', event.target.previousElementSibling)// WORKS
+    const leftPos = (element) => (element.offsetLeft) 
+    const topPos = (element) => (element.offsetTop) + 'px'
+    
 
     if (shipBlocks.children[0] !== undefined) shipBlocks.children[0].dataset.row = event.target.dataset.row
     else return
     
+    for (let i = 0; i < shipZone.children.length; i++) {
+        for (let k = 0; k < shipBlocks.children.length; k++) {
+            shipBlocks.children[k].dataset.ship = shipArrayInfo
+
+            if (shipZone.children[i].style.background == 'red' && shipBlocks.children[k]
+            ) {
+                console.log('Next ship placement', shipBlocks.children[k], shipZone.children[i], leftPos(shipBlocks.children[k]), shipZone.children[i].offsetLeft)
+                // Incomplete
+                
+            }
+
+            if (shipZone.children[i].dataset.row == shipBlocks.children[k].dataset.row &&
+            shipZone.children[i].dataset.ship == shipArrayInfo) {
+                // CHANGE THIS TO SOMETHING THAT CAN EQUAL TO THE LENGTH OF THE SHIPBLOCK
+                console.log('Testy')
+                shipZone.children[i].style.background = 'red'
+            }
+            
+        }
+    }
+
     for (let i = 0; i < shipBlocks.children.length; i++) {
-        if (!shipBlocks.children[i].dataset.column) shipBlocks.children[i].dataset.column = event.target.dataset.column++
-        else if (event.target.dataset.column !== 10 ) shipBlocks.children[i].dataset.column = event.target.dataset.column++
-        else return
+        let nextGridCell = event.target.nextElementSibling
+        if (!shipBlocks.children[i].dataset.row) shipBlocks.children[i].dataset.row = event.target.dataset.row
+        else shipBlocks.children[i].dataset.row = event.target.dataset.row
+        
+        while (nextGridCell.dataset.row == shipBlocks.children[i].dataset.row ) {
+            if (!shipBlocks.children[i].dataset.column) shipBlocks.children[i].dataset.column = event.target.dataset.column
+            else { 
+                shipBlocks.children[0].dataset.column = event.target.dataset.column
+                shipBlocks.children[i].dataset.column = nextGridCell.dataset.column
+                console.log('Check sibling', nextGridCell)
+
+            }
+            nextGridCell = nextGridCell.nextElementSibling
+            
+        }
     }
     event.target.dataset.column--
+    
+    
+    console.log('Outside icnrease')
 }
 
 const hoverOutShipPlacements = event => {
     shipBlocks.style.display = 'none'
-
+    // SHIP BLOCKS INCREASE WHEN HOVERING
+    // TRY TO USE COORDINATES TO PREVENT NEIGHBOR SHIPS
     for (let i = 0; i < shipBlocks.children.length; i++) {
-        if (event.target.dataset.column !== -1) shipBlocks.children[i].dataset.column = event.target.dataset.column--
+        if (event.target.dataset.column !== -1) {
+
+        }
         else return
     }
-    event.target.dataset.column++
+    event.target.dataset.column++ // CHECK THIS
+    
+    console.log('Hover array', shipArray)
 }
 
 const clickShipPlacement = event => {
     if (shipBlocks.lastElementChild.dataset.column < 10 && event.target.style.background != 'red' 
     && enemyWaters.children[Math.floor(Math.random() * enemyWaters.childElementCount)].style.background != 'red' ) placePlayerShips()
+    else return
 
     console.log('Find sibling', shipBlocks, shipBlocks.nextElementSibling)
-    console.log('Check row upper', event.target.dataset.row, event.target.dataset.row++)
+    
+    console.log('Find surrounding targets position', event.target.offsetTop)
+    // TRY TO USE THE SHIP ZONES CURRENT POSITION
+
     for (let i = 0; i < allyWaters.children.length; i++) {
         for (let j = 0; j < shipBlocks.children.length; j++) {
             if (shipBlocks.children[0].dataset.row == allyWaters.children[i].dataset.row
@@ -89,11 +142,13 @@ const clickShipPlacement = event => {
                 allyWaters.children[i].dataset.ship = shipArray[0];
                 event.target.style.background = 'red'
             }
+
             for (let k = 0; k < shipZone.children.length; k++) {
                 if (shipBlocks.children[0].dataset.row == shipZone.children[k].dataset.row &&
                 shipBlocks.children[j].dataset.column == shipZone.children[k].dataset.column )  {
                     shipZone.children[k].style.background = 'red'
                     shipZone.children[k].dataset.ship = shipArray[0]
+                    
                 }
             }
         }
@@ -166,28 +221,26 @@ const createComputerShips = (shipInfo) => {
         enemyWaters.children[randomPlacement].dataset.ship = shipArray[0];
         
     } else {
-        console.log('Else Find array', shipArray)
+        console.log('First Else Find array', shipArray)
         createComputerShips(shipInfo)
+        
         return
     }
     console.log('Check placement array', shipArray)
-    
-    console.log('Random check', enemyWaters.children[randomPlacement].dataset.row, enemyWaters.children[randomPlacement].dataset.column)
+
     
     // TRY TO MAKE RANDOM PLACEMENTS ALLOW SPACE FOR LENGTH OF SHIP TO BE PLACED
-    for (let i = 0; i < enemyWaters.children.length; i++) {
-
-        if (enemyWaters.children[i].dataset.ship == shipArray[0]) enemyWaters.children[i].style.background = 'red'
-        
-
+    
+        // IFGURE OUT WHY IT SOMETIMES DOESNT CREATE THE AI SHIP
         console.log('Inner sibling', shipLength, Number(enemyWaters.children[randomPlacement].dataset.column) + shipInfo + 1, shipInfo + 1)
         while (j != shipInfo && nextGrid) {
-            console.log('Sibling', nextGrid, shipLength)
+            console.log('Sibling', nextGrid)
             if (nextGrid.style.background != 'red' && enemyWaters.children[randomPlacement].dataset.row == nextGrid.dataset.row
             ) {
-                
+                nextGrid.style.background = 'red'
                 j++
             } else {
+                console.log('Second else find array', shipArray)
                 createComputerShips(shipInfo)
                 return
             }
@@ -197,8 +250,16 @@ const createComputerShips = (shipInfo) => {
             nextGrid = nextGrid.nextElementSibling
             
         }
-        
-    }
+    for (let i = 0; i < enemyWaters.children.length; i++) {
+
+        if (enemyWaters.children[i].dataset.ship == shipArray[0] 
+        ) {
+            enemyWaters.children[i].style.background = 'red'
+            console.log('Check ships', enemyWaters.children[i])
+        } 
+
+    }    
+    
 }
 
 const getGridPosition = (parent, index) => {
@@ -230,7 +291,6 @@ const hoverGridCell = (event) => {
 
     
 
-    console.log('Event hover', event, event.target.nextElementSibling, event.target.offsetTop)
     // USE getShipPositions to find the receivedattacks coordinates
 
     
