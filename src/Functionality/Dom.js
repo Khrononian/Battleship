@@ -10,6 +10,7 @@ const shipBlocks = document.querySelector('.ship-block');
 const getShipPositions = GameBoard()
 const getPlayerType = Player()
 const shipArray = ['Carrier', 'Battle Ship', 'Destroyer', 'Submarine', 'Patrol Boat']
+const shipLengths = [carrier.length, battleShip.length, destroyer.length, submarine.length, patrolBoat.length]
 const array = [];
 
 const loadGridBlocks = () => { // WORK ON GETTING COORDINATES
@@ -49,32 +50,80 @@ const loadGridBlocks = () => { // WORK ON GETTING COORDINATES
 
 const hoverShipPlacements = event => {
     let shipArrayInfo = shipArray[0]
+    let nextInnerGridCell = event.target.nextElementSibling
+    let upper = 0;
 
     shipBlocks.style.display = 'grid'
     shipBlocks.style.left = (event.target.offsetLeft) + 'px'
     shipBlocks.style.top = (event.target.offsetTop) + 'px'
-    shipBlocks.lastElementChild.style.border = 'transparent'
+    shipBlocks.lastElementChild.style.borderRight = 'transparent'
     
+    for (let i = 0; i < shipZone.children.length; i++) {
+        if (shipZone.children[i].style.background == 'red' && shipZone.children[i].nextElementSibling.style.background != 'red'
+            ) {
+                // GET IT TO EQUAL THE VERTICALS OF ITS COORDINATE
+                console.log('CHECK NEXT SIBLING', shipZone.children[i].nextElementSibling)
+                
+            // TURN SIBLING CHECKER INTO A FUNCTION THAT RETURNS TRUE/FALSE IF NEAR OTHER SHIPS
+            } // USE ELSE FOR ANY NULL NEXT ELEMENTS
+        if (shipZone.children[i].style.background == 'red' && shipZone.children[i].previousElementSibling.style.background != 'red'
+        && shipZone.children[i].previousElementSibling !== null) {
+            console.log('CHECK PREVIOUS SIBLING', shipZone.children[i].previousElementSibling)
+        } // USE ELSE FOR ANY NULL PREVIOUS ELEMENTS
+
+        for (let k = 0; k < shipBlocks.children.length; k++) {
+            
+            
+            
+            if (shipZone.children[i].style.background !== 'red' && shipZone.children[i].dataset.column == shipBlocks.children[k].dataset.column
+            && shipZone.children[i].dataset.row == 1) {
+                // FIND ROWS FOR ALL PLACED SHIPS
+                console.log('CHECK UPPER', shipZone.children[i])
+                console.log('CHECK UPPER PREV', shipZone.children[i].previousElementSibling)
+                console.log('CHECK UPPER NEXT', shipZone.children[i].nextElementSibling)
+                
+                shipZone.children[i].dataset.antiMagnet = true;
+                shipZone.children[i].previousElementSibling.dataset.antiMagnet = true
+                shipZone.children[i].nextElementSibling.dataset.antiMagnet = true
+
+                // USE ANTI MAGNET TO CHECK IF THE PLACEMENTS ARE AVAILABLE
+                // WORKS KIND OF, NOW GET THE NEXT AND PREVIOUS ELEMENT'S VERTICALS
+                // MAKE THE WHOLE SIBLING CHECKER INTO A FUNCTION
+            }
+        }
+    }
 
     console.log('Previos Ship placement', event.target.previousElementSibling)// WORKS
-    const leftPos = (element) => (element.offsetLeft) 
-    const topPos = (element) => (element.offsetTop) + 'px'
-    
+    console.log('Checking', shipLengths[0])
+    while (upper != shipLengths[0] && nextInnerGridCell) { // CHANGE THIS TO A UNIVERSAL SHIP LENGTH
+        if (shipBlocks.children[upper] && event.target.dataset.row == nextInnerGridCell.dataset.row ) shipBlocks.children[upper].dataset.column = nextInnerGridCell.dataset.column - 1 
+        else if (nextInnerGridCell.dataset.column == 0) shipBlocks.lastElementChild.dataset.column = 9;
+            
+        console.log('Check children', nextInnerGridCell, nextInnerGridCell.dataset.column, shipBlocks.lastElementChild.dataset.column)
+        console.log('Exit', nextInnerGridCell, upper, )
+        upper++
 
-    if (shipBlocks.children[0] !== undefined) shipBlocks.children[0].dataset.row = event.target.dataset.row
-    else return
+        nextInnerGridCell = nextInnerGridCell.nextElementSibling
+    }
     
+    for (let i = 0; i < shipBlocks.children.length; i++) {
+        if (!shipBlocks.children[i].dataset.row) shipBlocks.children[i].dataset.row = event.target.dataset.row
+        else shipBlocks.children[i].dataset.row = event.target.dataset.row
+        
+        if (shipBlocks.children[0].dataset.column && event.target.dataset.row == shipBlocks.children[i].dataset.row) shipBlocks.children[0].dataset.column = event.target.dataset.column
+
+        // shipBlocks.children[i].dataset.column = nextInnerGridCell.dataset.column - 1
+    }
     for (let i = 0; i < shipZone.children.length; i++) {
         for (let k = 0; k < shipBlocks.children.length; k++) {
             shipBlocks.children[k].dataset.ship = shipArrayInfo
-
+            
             if (shipZone.children[i].style.background == 'red' && shipBlocks.children[k]
             ) {
-                console.log('Next ship placement', shipBlocks.children[k], shipZone.children[i], leftPos(shipBlocks.children[k]), shipZone.children[i].offsetLeft)
+                console.log('Next ship placement', shipBlocks.children[k], shipZone.children[i], shipZone.children[i].offsetLeft)
                 // Incomplete
                 
             }
-
             if (shipZone.children[i].dataset.row == shipBlocks.children[k].dataset.row &&
             shipZone.children[i].dataset.ship == shipArrayInfo) {
                 // CHANGE THIS TO SOMETHING THAT CAN EQUAL TO THE LENGTH OF THE SHIPBLOCK
@@ -82,28 +131,9 @@ const hoverShipPlacements = event => {
                 shipZone.children[i].style.background = 'red'
             }
             
-        }
-    }
-
-    for (let i = 0; i < shipBlocks.children.length; i++) {
-        let nextGridCell = event.target.nextElementSibling
-        if (!shipBlocks.children[i].dataset.row) shipBlocks.children[i].dataset.row = event.target.dataset.row
-        else shipBlocks.children[i].dataset.row = event.target.dataset.row
-        
-        while (nextGridCell.dataset.row == shipBlocks.children[i].dataset.row ) {
-            if (!shipBlocks.children[i].dataset.column) shipBlocks.children[i].dataset.column = event.target.dataset.column
-            else { 
-                shipBlocks.children[0].dataset.column = event.target.dataset.column
-                shipBlocks.children[i].dataset.column = nextGridCell.dataset.column
-                console.log('Check sibling', nextGridCell)
-
-            }
-            nextGridCell = nextGridCell.nextElementSibling
             
         }
     }
-    event.target.dataset.column--
-    
     
     console.log('Outside icnrease')
 }
@@ -118,14 +148,18 @@ const hoverOutShipPlacements = event => {
         }
         else return
     }
-    event.target.dataset.column++ // CHECK THIS
+
     
     console.log('Hover array', shipArray)
 }
 
 const clickShipPlacement = event => {
-    if (shipBlocks.lastElementChild.dataset.column < 10 && event.target.style.background != 'red' 
-    && enemyWaters.children[Math.floor(Math.random() * enemyWaters.childElementCount)].style.background != 'red' ) placePlayerShips()
+    if (shipBlocks.children[0].dataset.column !== 9 && event.target.style.background != 'red' 
+    && enemyWaters.children[Math.floor(Math.random() * enemyWaters.childElementCount)].style.background != 'red' 
+    && !event.target.dataset.antiMagnet) { 
+        placePlayerShips() 
+    
+    }
     else return
 
     console.log('Find sibling', shipBlocks, shipBlocks.nextElementSibling)
@@ -150,6 +184,7 @@ const clickShipPlacement = event => {
                     shipZone.children[k].dataset.ship = shipArray[0]
                     
                 }
+                
             }
         }
     }
@@ -164,7 +199,10 @@ const clickShipPlacement = event => {
         shipBlocks.style.gridTemplateColumns = `repeat(3, 1fr)`
     } else if (shipArray[0] == submarine.shipName) shipBlocks.removeChild(shipBlocks.lastElementChild);
     
-    if (shipArray.length !== 1) shipArray.splice(0, 1)
+    if (shipArray.length !== 1 && shipLengths.length !== 1) {
+        shipArray.splice(0, 1)
+        shipLengths.splice(0, 1)
+    }
     else {
         document.querySelector('.contain').style.filter = 'none'
         document.querySelector('header').style.filter = 'none'
