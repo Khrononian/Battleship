@@ -49,14 +49,19 @@ const loadGridBlocks = () => { // WORK ON GETTING COORDINATES
 }
 
 const hoverShipPlacements = event => {
+    const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     let shipArrayInfo = shipArray[0]
     let nextInnerGridCell = event.target.nextElementSibling
+    
     let upper = 0;
 
     shipBlocks.style.display = 'grid'
     shipBlocks.style.left = (event.target.offsetLeft) + 'px'
     shipBlocks.style.top = (event.target.offsetTop) + 'px'
     shipBlocks.lastElementChild.style.borderRight = 'transparent'
+    let accurateRow;
+    let testRow
+    
     
     for (let i = 0; i < shipZone.children.length; i++) {
         if (shipZone.children[i].style.background == 'red' && shipZone.children[i].nextElementSibling.style.background != 'red'
@@ -72,24 +77,55 @@ const hoverShipPlacements = event => {
         } // USE ELSE FOR ANY NULL PREVIOUS ELEMENTS
 
         for (let k = 0; k < shipBlocks.children.length; k++) {
+            let lowRow = shipZone.children[i].dataset.row
+            let highRow = shipZone.children[i].dataset.row
+
+            let row = shipBlocks.children[k].dataset.row
             
+        
             
-            
-            if (shipZone.children[i].style.background !== 'red' && shipZone.children[i].dataset.column == shipBlocks.children[k].dataset.column
-            && shipZone.children[i].dataset.row == 1) {
+
+            accurateRow = Number(highRow) + 1
+            testRow = Number(row)
+            console.log('NOW', accurateRow)
+            if (shipZone.children[i].style.background == 'red'  && shipZone.children[i].dataset.column == shipBlocks.children[k].dataset.column
+            && shipZone.children[i].dataset.row == shipBlocks.children[k].dataset.row
+            && shipZone.children[i].nextElementSibling && shipZone.children[i].previousElementSibling) {
                 // FIND ROWS FOR ALL PLACED SHIPS
-                console.log('CHECK UPPER', shipZone.children[i])
-                console.log('CHECK UPPER PREV', shipZone.children[i].previousElementSibling)
-                console.log('CHECK UPPER NEXT', shipZone.children[i].nextElementSibling)
+                // USE SEPERATE IF STATEMENTS
+                console.log('SHOW IT', Number(lowRow - 1), shipZone.children[i].dataset.row, Number(highRow) + 1, 'Acc', accurateRow, testRow)
                 
-                shipZone.children[i].dataset.antiMagnet = true;
-                shipZone.children[i].previousElementSibling.dataset.antiMagnet = true
-                shipZone.children[i].nextElementSibling.dataset.antiMagnet = true
+                    if (Number(lowRow - 1) < shipZone.children[i].dataset.row) {
+                        console.log('CHECK UPPER VERTICAL DOWN', )
+                        shipZone.children[i].dataset.antiMagnet = true;
+                    }
+                    if (testRow == shipZone.children[i].dataset.row) {
+
+                        console.log('CHECK UPPER VERTICAL UP', shipZone.children[i], accurateRow)
+                        shipZone.children[i].dataset.antiMagnet = true;
+                    }
+                    
+                    console.log('CHECK UPPER NUM', shipZone.children[i], )
+                    console.log('CHECK UPPER', shipZone.children[i])
+                    console.log('CHECK UPPER PREV', shipZone.children[i].previousElementSibling)
+                    console.log('CHECK UPPER NEXT', shipZone.children[i].nextElementSibling)
+                    console.log('CHECK UPPER ROW', shipZone.children[i].dataset.row > event.target.dataset.row)
+                    
+                    shipZone.children[i].previousElementSibling.dataset.antiMagnet = true
+                    shipZone.children[i].nextElementSibling.dataset.antiMagnet = true
 
                 // USE ANTI MAGNET TO CHECK IF THE PLACEMENTS ARE AVAILABLE
                 // WORKS KIND OF, NOW GET THE NEXT AND PREVIOUS ELEMENT'S VERTICALS
                 // MAKE THE WHOLE SIBLING CHECKER INTO A FUNCTION
+            
             }
+            console.log('FIND INDEX', numbers.indexOf(testRow) + 1, testRow, lowRow, accurateRow, shipZone.children[i].dataset.row)
+                if (shipZone.children[i].style.background !== 'red'  && shipZone.children[i].dataset.column == shipBlocks.children[k].dataset.column
+                && shipZone.children[i].dataset.row == numbers.indexOf(testRow) // TRY INDEXOF
+                && shipZone.children[i].nextElementSibling && shipZone.children[i].previousElementSibling) {
+
+                }
+            
         }
     }
 
@@ -148,12 +184,18 @@ const hoverOutShipPlacements = event => {
         }
         else return
     }
-
     
-    console.log('Hover array', shipArray)
+    
+    
+
 }
 
 const clickShipPlacement = event => {
+    let accurateRow;
+    let testRow
+    const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+    
     if (shipBlocks.children[0].dataset.column !== 9 && event.target.style.background != 'red' 
     && enemyWaters.children[Math.floor(Math.random() * enemyWaters.childElementCount)].style.background != 'red' 
     && !event.target.dataset.antiMagnet) { 
@@ -161,6 +203,21 @@ const clickShipPlacement = event => {
     
     }
     else return
+
+    for (let i = 0; i < shipZone.children.length; i++) {
+        for(let k = 0; k < shipBlocks.children.length; k++) {
+            let row = shipBlocks.children[k].dataset.row
+            let highRow = shipZone.children[i].dataset.row
+            
+            testRow = Number(row)
+            accurateRow = Number(highRow) + 1
+            if (shipZone.children[i].style.background !== 'red'  && shipZone.children[i].dataset.column == shipBlocks.children[k].dataset.column
+                && shipZone.children[i].dataset.row == numbers.indexOf(testRow) + 1 // TRY INDEXOF
+                && shipZone.children[i].nextElementSibling && shipZone.children[i].previousElementSibling) {
+                    console.log('COLORS', shipZone.children[i], testRow, accurateRow)
+                }
+        }
+    }
 
     console.log('Find sibling', shipBlocks, shipBlocks.nextElementSibling)
     
@@ -321,7 +378,7 @@ const getElementIndex = (element) => {
 const hoverGridCell = (event) => {
     event.target.style.background = '#3232';
     ship.hit(Number(event.target.innerText)) // Not sure what this is, check later
-    console.log('Find', event.target.innerText) 
+
 
 
     
