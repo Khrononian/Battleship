@@ -362,7 +362,8 @@ const createComputerShips = (shipInfo) => {
             if (nextGrid.nextElementSibling && enemyWaters.children[randomPlacement].dataset.row == nextGrid.nextElementSibling.dataset.row && nextGrid.nextElementSibling.dataset.ship != shipArray[0]) {
                 console.log('TITANIC', enemyWaters.children[randomPlacement], nextGrid, nextGrid.nextElementSibling, shipArray)
                 // THIS PREVENTS IT FROM APPEARING SIDE BY SIDE
-                shipArray.unshift(shipArray[0])
+                
+                shipArray.unshift(shipArray[0]) // try removing this
                 enemyWaters.children[randomPlacement].style.background = 'transparent';
                 delete enemyWaters.children[randomPlacement].dataset.ship
                 delete enemyWaters.children[randomPlacement].dataset.antiMagnet
@@ -370,6 +371,9 @@ const createComputerShips = (shipInfo) => {
                 delete enemyWaters.children[randomPlacement].nextElementSibling.dataset.ship
                 delete enemyWaters.children[randomPlacement].nextElementSibling.dataset.antiMagnet
                 nextGrid.style.background = 'transparent';
+                // nextGrid.previousElementSibling.style.background = 'transparent'
+                // delete nextGrid.previousElementSibling.dataset.ship
+                // delete nextGrid.previousElementSibling.dataset.antiMagnet
                 delete nextGrid.dataset.ship
                 delete nextGrid.dataset.antiMagnet
 
@@ -403,16 +407,30 @@ const createComputerShips = (shipInfo) => {
             
             while (k != shipInfo && random && previous && random.nextElementSibling) {
                 console.log('UP', random, previous)
-                if (random.nextElementSibling.style.background == 'red') console.log('EXPLODE UP', random, enemyWaters.children[i], enemyWaters.children[randomPlacement])
-                
-                random.dataset.antiMagnet = 'true';
-                random.previousElementSibling.dataset.antiMagnet = 'true';
-                random.nextElementSibling.dataset.antiMagnet = 'true';
-                previous.dataset.antiMagnet = 'true';
-                random.dataset.ship = shipArray[0]
-                previous.dataset.ship = shipArray[0]
-                random.previousElementSibling.dataset.ship = shipArray[0]
-                random.nextElementSibling.dataset.ship = shipArray[0]
+                if (random.nextElementSibling.style.background == 'red') {
+                    console.log('EXPLODE UP', random, enemyWaters.children[i], enemyWaters.children[randomPlacement])
+                    let nextChildren = enemyWaters.children[randomPlacement].nextElementSibling
+                    while (nextChildren && nextChildren.dataset.ship == enemyWaters.children[randomPlacement].dataset.ship) {
+                        console.log('EXPLODE IS RED', enemyWaters.children[randomPlacement], enemyWaters.children[randomPlacement].nextElementSibling, nextChildren)
+                        
+                        nextChildren.style.background = 'transparent'
+                        delete nextChildren.dataset.antiMagnet
+                        delete nextChildren.dataset.ship
+                        
+                        if (!nextChildren) createComputerShips(shipInfo)
+
+                        nextChildren = nextChildren.nextElementSibling
+                    }
+                } else {
+                    random.dataset.antiMagnet = 'true';
+                    random.previousElementSibling.dataset.antiMagnet = 'true';
+                    random.nextElementSibling.dataset.antiMagnet = 'true';
+                    previous.dataset.antiMagnet = 'true';
+                    random.dataset.ship = shipArray[0]
+                    previous.dataset.ship = shipArray[0]
+                    random.previousElementSibling.dataset.ship = shipArray[0]
+                    random.nextElementSibling.dataset.ship = shipArray[0]
+                }
                 
                 k++
                 random = random.nextElementSibling
@@ -426,19 +444,38 @@ const createComputerShips = (shipInfo) => {
         && nextRandom) {
             while (p != shipInfo && nextRandom && previousRandom) {
                 console.log('DOWN', nextRandom, previousRandom)
-                // IT WORKS, NOW MAKE THE FUNCTION CALL ITSELF AGAIN AND REMOVE ALL CORRELATIONS
                 // FIX THE PATROL BOAT TO PREVENT IT FROM BEING PLACED DIAGONALLY
-                if (nextRandom.nextElementSibling.style.background == 'red') console.log('EXPLODE DOWN', nextRandom, enemyWaters.children[i], enemyWaters.children[randomPlacement])
-                nextRandom.dataset.antiMagnet = 'true'
-                nextRandom.previousElementSibling.dataset.antiMagnet = 'true';
-                nextRandom.nextElementSibling.dataset.antiMagnet = 'true'
-                previousRandom.dataset.antiMagnet = 'true';
                 
-                nextRandom.dataset.ship = shipArray[0]
-                nextRandom.previousElementSibling.dataset.ship = shipArray[0]
-                nextRandom.nextElementSibling.dataset.ship = shipArray[0]
-                previousRandom.dataset.ship = shipArray[0]
+                // 
+                if (nextRandom.nextElementSibling.style.background == 'red') {
+                    let nextChildren = enemyWaters.children[randomPlacement].nextElementSibling
+                    console.log('EXPLODE DOWN', nextRandom, enemyWaters.children[i], enemyWaters.children[randomPlacement], nextChildren)
+                    
+                    while (nextChildren && nextChildren.dataset.ship == enemyWaters.children[randomPlacement].dataset.ship) {
+                        console.log('EXPLODE IS RED', enemyWaters.children[randomPlacement], enemyWaters.children[randomPlacement].nextElementSibling, nextChildren)
 
+                        nextChildren.style.background = 'transparent'
+                        delete nextChildren.dataset.antiMagnet
+                        delete nextChildren.dataset.ship
+                        delete enemyWaters.children[randomPlacement].previousElementSibling.dataset.ship
+                        delete enemyWaters.children[randomPlacement].previousElementSibling.dataset.antiMagnet
+
+                        if (!nextChildren) createComputerShips(shipInfo)
+
+                        nextChildren = nextChildren.nextElementSibling
+                    }
+                } else {
+                    nextRandom.dataset.antiMagnet = 'true'
+                    nextRandom.previousElementSibling.dataset.antiMagnet = 'true';
+                    nextRandom.nextElementSibling.dataset.antiMagnet = 'true'
+                    previousRandom.dataset.antiMagnet = 'true';
+                    
+                    nextRandom.dataset.ship = shipArray[0]
+                    nextRandom.previousElementSibling.dataset.ship = shipArray[0]
+                    nextRandom.nextElementSibling.dataset.ship = shipArray[0]
+                    previousRandom.dataset.ship = shipArray[0]
+                }
+                
                 p++
                 nextRandom = nextRandom.nextElementSibling
             }
