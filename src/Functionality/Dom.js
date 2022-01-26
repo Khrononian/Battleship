@@ -60,122 +60,47 @@ const hoverShipPlacements = event => {
     shipBlocks.style.left = (event.target.offsetLeft) + 'px'
     shipBlocks.style.top = (event.target.offsetTop) + 'px'
     shipBlocks.lastElementChild.style.borderRight = 'transparent'
-    let accurateRow;
-    let testRow
     
-    
-    for (let i = 0; i < shipZone.children.length; i++) {
-        if (shipZone.children[i].style.background == 'red' && shipZone.children[i].nextElementSibling.style.background != 'red'
-            ) {
-                // GET IT TO EQUAL THE VERTICALS OF ITS COORDINATE
-                console.log('CHECK NEXT SIBLING', shipZone.children[i].nextElementSibling)
-                
-            // TURN SIBLING CHECKER INTO A FUNCTION THAT RETURNS TRUE/FALSE IF NEAR OTHER SHIPS
-            } // USE ELSE FOR ANY NULL NEXT ELEMENTS
-        if (shipZone.children[i].style.background == 'red' && shipZone.children[i].previousElementSibling.style.background != 'red'
-        && shipZone.children[i].previousElementSibling !== null) {
-            console.log('CHECK PREVIOUS SIBLING', shipZone.children[i].previousElementSibling)
-        } // USE ELSE FOR ANY NULL PREVIOUS ELEMENTS
-
-        for (let k = 0; k < shipBlocks.children.length; k++) {
-            let lowRow = shipZone.children[i].dataset.row
-            let highRow = shipZone.children[i].dataset.row
-
-            let row = shipBlocks.children[k].dataset.row
-            
-        
-            
-
-            accurateRow = Number(highRow) + 1
-            testRow = Number(row)
-            console.log('NOW', accurateRow)
-            if (shipZone.children[i].style.background == 'red'  && shipZone.children[i].dataset.column == shipBlocks.children[k].dataset.column
-            && shipZone.children[i].dataset.row == shipBlocks.children[k].dataset.row
-            && shipZone.children[i].nextElementSibling && shipZone.children[i].previousElementSibling) {
-                // FIND ROWS FOR ALL PLACED SHIPS
-                // USE SEPERATE IF STATEMENTS
-                console.log('SHOW IT', Number(lowRow - 1), shipZone.children[i].dataset.row, Number(highRow) + 1, 'Acc', accurateRow, testRow)
-                
-                    if (Number(lowRow - 1) < shipZone.children[i].dataset.row) {
-                        console.log('CHECK UPPER VERTICAL DOWN', )
-                        shipZone.children[i].dataset.antiMagnet = true;
-                    }
-                    if (testRow == shipZone.children[i].dataset.row) {
-
-                        console.log('CHECK UPPER VERTICAL UP', shipZone.children[i], accurateRow)
-                        shipZone.children[i].dataset.antiMagnet = true;
-                    }
-                    
-                    console.log('CHECK UPPER NUM', shipZone.children[i], )
-                    console.log('CHECK UPPER', shipZone.children[i])
-                    console.log('CHECK UPPER PREV', shipZone.children[i].previousElementSibling)
-                    console.log('CHECK UPPER NEXT', shipZone.children[i].nextElementSibling)
-                    console.log('CHECK UPPER ROW', shipZone.children[i].dataset.row > event.target.dataset.row)
-                    
-                    shipZone.children[i].previousElementSibling.dataset.antiMagnet = true
-                    shipZone.children[i].nextElementSibling.dataset.antiMagnet = true
-
-                // USE ANTI MAGNET TO CHECK IF THE PLACEMENTS ARE AVAILABLE
-                // WORKS KIND OF, NOW GET THE NEXT AND PREVIOUS ELEMENT'S VERTICALS
-                // MAKE THE WHOLE SIBLING CHECKER INTO A FUNCTION
-            
-            }
-            console.log('FIND INDEX', numbers.indexOf(testRow) + 1, testRow, lowRow, accurateRow, shipZone.children[i].dataset.row)
-                if (shipZone.children[i].style.background !== 'red'  && shipZone.children[i].dataset.column == shipBlocks.children[k].dataset.column
-                && shipZone.children[i].dataset.row == numbers.indexOf(testRow) // TRY INDEXOF
-                && shipZone.children[i].nextElementSibling && shipZone.children[i].previousElementSibling) {
-
-                }
-            
-        }
-    }
-
-    console.log('Previos Ship placement', event.target.previousElementSibling)// WORKS
-    console.log('Checking', shipLengths[0])
-    while (upper != shipLengths[0] && nextInnerGridCell) { // CHANGE THIS TO A UNIVERSAL SHIP LENGTH
-        if (shipBlocks.children[upper] && event.target.dataset.row == nextInnerGridCell.dataset.row ) shipBlocks.children[upper].dataset.column = nextInnerGridCell.dataset.column - 1 
-        else if (nextInnerGridCell.dataset.column == 0) shipBlocks.lastElementChild.dataset.column = 9;
-        if (shipBlocks.children[upper] && !event.target.dataset.antiMagnet && !nextInnerGridCell.dataset.antiMagnet) hoverMagnet = false
-        else hoverMagnet = true
-
-        console.log('Check children', nextInnerGridCell, shipBlocks.children[upper], shipBlocks.lastElementChild.dataset.column)
-        console.log('Exit', nextInnerGridCell, upper, )
-        upper++
-    // ITS HERE, FIGURE OUT WHY IT WONT PLACE EVEN WHEN IT IS OUT OF ITS MAGNET
-    // MAGNET APPEARS ON ANOTHER ROW FROM LAST ELEMENT. CHECK NEXT SIBLING/PREVIOUS SIBLING
-        nextInnerGridCell = nextInnerGridCell.nextElementSibling
-    }
     
     for (let i = 0; i < shipBlocks.children.length; i++) {
+        for (let k = 0; k < shipZone.children.length; k++) {
+            while (upper != shipLengths[0] && nextInnerGridCell) { // CHANGE THIS TO A UNIVERSAL SHIP LENGTH
+                if (shipBlocks.children[upper] && event.target.dataset.row == nextInnerGridCell.dataset.row ) shipBlocks.children[upper].dataset.column = nextInnerGridCell.dataset.column - 1 
+                else if (nextInnerGridCell.dataset.column == 0) shipBlocks.lastElementChild.dataset.column = 9;
+                shipBlocks.children[upper].dataset.antiMagnet = nextInnerGridCell.dataset.antiMagnet
+                if (shipBlocks.children.length > 3) shipBlocks.lastElementChild.dataset.antiMagnet = 'undefined'
+                else {
+                    shipBlocks.lastElementChild.dataset.antiMagnet = 'undefined'
+                    hoverMagnet = false
+                }
+                
+                if (!shipBlocks.children[upper].dataset.antiMagnet || shipBlocks.children[upper].dataset.antiMagnet == 'undefined' || !event.target.dataset.antiMagnet ){
+                    hoverMagnet = false
+                    
+                }
+                else {
+                    console.log('TRUTHY', shipBlocks[upper], event.target)
+                    
+                    
+                }
+
+                console.log('Check children', nextInnerGridCell, shipBlocks.children[upper], shipBlocks.lastElementChild.dataset.column)
+                console.log('Exit', nextInnerGridCell, shipBlocks.children[upper], hoverMagnet )
+                upper++
+            
+                nextInnerGridCell = nextInnerGridCell.nextElementSibling
+            }
+
+
+        }
         if (!shipBlocks.children[i].dataset.row) shipBlocks.children[i].dataset.row = event.target.dataset.row
         else shipBlocks.children[i].dataset.row = event.target.dataset.row
-        
         if (shipBlocks.children[0].dataset.column && event.target.dataset.row == shipBlocks.children[i].dataset.row) shipBlocks.children[0].dataset.column = event.target.dataset.column
 
-        // shipBlocks.children[i].dataset.column = nextInnerGridCell.dataset.column - 1
-    }
-    for (let i = 0; i < shipZone.children.length; i++) {
-        for (let k = 0; k < shipBlocks.children.length; k++) {
-            shipBlocks.children[k].dataset.ship = shipArrayInfo
-            
-            if (shipZone.children[i].style.background == 'red' && shipBlocks.children[k]
-            ) {
-                console.log('Next ship placement', shipBlocks.children[k], shipZone.children[i], shipZone.children[i].offsetLeft)
-                // Incomplete
-                
-            }
-            if (shipZone.children[i].dataset.row == shipBlocks.children[k].dataset.row &&
-            shipZone.children[i].dataset.ship == shipArrayInfo) {
-                // CHANGE THIS TO SOMETHING THAT CAN EQUAL TO THE LENGTH OF THE SHIPBLOCK
-                console.log('Testy')
-                shipZone.children[i].style.background = 'red'
-            }
-            // CHECK HERE FOR POTENTIAL HOVER TO CHECK IF ITS POSSIBLE PLACEMENT
-            
-        }
+
     }
     
-    console.log('Outside icnrease')
+
 }
 
 const hoverOutShipPlacements = event => {
@@ -188,28 +113,30 @@ const hoverOutShipPlacements = event => {
         }
         else return
     }
-    
-    
-    
-
 }
+let firstIndex = 2
+let secondIndex = 3
 
 const clickShipPlacement = event => {
     let accurateRow;
     let testRow
     const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-    console.log('HOVER', hoverMagnet)
-    if (shipBlocks.children[0].dataset.column !== 9 && event.target.style.background != 'red' 
+    console.log('HOVER', hoverMagnet, firstIndex, secondIndex, shipBlocks.lastElementChild)
+
+    hoverMagnet = false;
+    if (shipBlocks.children[firstIndex].dataset.column < shipBlocks.children[secondIndex].dataset.column && event.target.style.background != 'red' 
     && enemyWaters.children[Math.floor(Math.random() * enemyWaters.childElementCount)].style.background != 'red' 
-    && !event.target.dataset.antiMagnet && hoverMagnet == false) { 
-        placePlayerShips() 
-        hoverMagnet = true
+    && !event.target.dataset.antiMagnet && hoverMagnet == false && shipBlocks.children[secondIndex].dataset.antiMagnet == 'undefined') {
+        if (firstIndex !== 0) {
+            firstIndex--
+            secondIndex-- 
+        } 
+        console.log('EXECUTES')
+        placePlayerShips()
+        
     }
-    else {
-        hoverMagnet = false
-        return;
-    }
+    else return
     // RECHECK THE CLICKS TO SEE IF IT WORKS
     for (let i = 0; i < shipZone.children.length; i++) {
         
@@ -222,7 +149,8 @@ const clickShipPlacement = event => {
             if (shipZone.children[i].style.background !== 'red'  && shipZone.children[i].dataset.column == shipBlocks.children[k].dataset.column
             && shipZone.children[i].dataset.row == numbers.indexOf(testRow) + 1 // TRY INDEXOF
             && shipZone.children[i].nextElementSibling && shipZone.children[i].previousElementSibling
-            && shipZone.children[i].nextElementSibling.dataset.row == shipZone.children[i].dataset.row) {
+            && shipZone.children[i].nextElementSibling.dataset.row == shipZone.children[i].dataset.row
+            && shipZone.children[i].previousElementSibling.dataset.row == shipZone.children[i].dataset.row) {
                 console.log('COLORS', shipZone.children[i], testRow, accurateRow, 'Next Sib', shipZone.children[i].nextElementSibling, 'Prev Sib', shipZone.children[i].previousElementSibling)
                 shipZone.children[i].dataset.antiMagnet = true;
                 shipZone.children[i].nextElementSibling.dataset.antiMagnet = true;
@@ -232,7 +160,8 @@ const clickShipPlacement = event => {
             if (shipZone.children[i].style.background !== 'red'  && shipZone.children[i].dataset.column == shipBlocks.children[k].dataset.column
             && shipZone.children[i].dataset.row == numbers.indexOf(testRow) - 1 // TRY INDEXOF
             && shipZone.children[i].nextElementSibling && shipZone.children[i].previousElementSibling
-            && shipZone.children[i].nextElementSibling.dataset.row == shipZone.children[i].dataset.row) {
+            && shipZone.children[i].nextElementSibling.dataset.row == shipZone.children[i].dataset.row
+            && shipZone.children[i].previousElementSibling.dataset.row == shipZone.children[i].dataset.row) {
                 console.log('BEFORE COLORS', shipZone.children[i])
                 shipZone.children[i].dataset.antiMagnet = true;
                 shipZone.children[i].nextElementSibling.dataset.antiMagnet = true;
@@ -248,7 +177,8 @@ const clickShipPlacement = event => {
             } 
             
             if (shipZone.children[i].previousElementSibling && shipZone.children[i].style.background != 'red' && shipZone.children[i].previousElementSibling.style.background != 'red'
-            && shipZone.children[i].dataset.row == testRow && shipZone.children[i].dataset.column == shipBlocks.children[k].dataset.column) {
+            && shipZone.children[i].dataset.row == testRow && shipZone.children[i].dataset.column == shipBlocks.children[k].dataset.column
+            && shipZone.children[i].previousElementSibling.dataset.row == shipZone.children[i].dataset.row) {
                 console.log('CHECK PREVIOUS SIBLING', shipZone.children[i].previousElementSibling)
                 shipZone.children[i].previousElementSibling.dataset.antiMagnet = true;
             } 
@@ -357,77 +287,165 @@ const createComputerShips = (shipInfo) => {
     
     if (enemyWaters.children[randomPlacement].style.background != 'red' &&  Number(enemyWaters.children[randomPlacement].dataset.column) + shipInfo + 1 <= 10
     && enemyWaters.children[randomPlacement].dataset.ship != shipArray[0]
-    && !enemyWaters.children[randomPlacement].dataset.antiMagnet) {
+    && !enemyWaters.children[randomPlacement].dataset.antiMagnet && !enemyWaters.children[randomPlacement].nextElementSibling.dataset.antiMagnet
+    ) {
         
         enemyWaters.children[randomPlacement].dataset.ship = shipArray[0];
-        
+        enemyWaters.children[randomPlacement].style.background = 'red'
+        enemyWaters.children[randomPlacement].dataset.antiMagnet = 'true'
+        console.log('DID IT ADD?', enemyWaters.children[randomPlacement])
     } else {
-        console.log('First Else Find array', shipArray)
+        console.log('First Else Find array', shipArray, enemyWaters.children[randomPlacement])
         createComputerShips(shipInfo)
         
         return
     }
-    
-    console.log('Check placement array', shipArray)
-    
+
+    let p = 0;
+    let k = 0;
+
+
+    for (let i = 0; i < enemyWaters.children.length; i++) {
+        let nextRandom = enemyWaters.children[i].nextElementSibling
+        let random = enemyWaters.children[i].nextElementSibling
+        let previousRandom = enemyWaters.children[i].previousElementSibling
+        let previous = enemyWaters.children[i].previousElementSibling
+
         
-    let i = 0;
-        // IFGURE OUT WHY IT SOMETIMES DOESNT CREATE THE AI SHIP
-        console.log('Inner sibling', shipLength, Number(enemyWaters.children[randomPlacement].dataset.column) + shipInfo + 1, shipInfo + 1)
-        
-        
-        
-        while (j != shipInfo && nextGrid && previousGrid) {
-            console.log('Sibling', nextGrid, enemyWaters.children[i])
-            
-            if (nextGrid.style.background != 'red' && enemyWaters.children[randomPlacement].dataset.row == nextGrid.dataset.row
-            && enemyWaters.children[randomPlacement].dataset.row == previousGrid.dataset.row
+        while (j != shipInfo && nextGrid && previousGrid ) {
+            console.log('MINI', enemyWaters.children[randomPlacement], nextGrid, nextGrid.nextElementSibling)
+
+            if (nextGrid.nextElementSibling && nextGrid.nextElementSibling.style.background != 'red'
+            && enemyWaters.children[randomPlacement].dataset.row == nextGrid.nextElementSibling.dataset.row
             ) {
-                console.log('ENEMY CLONE', previousGrid, nextGrid)
-                nextGrid.style.background = 'red'
-                nextGrid.nextElementSibling.dataset.antiMagnet = true;
-                previousGrid.dataset.antiMagnet = true;
+                console.log('PALE', nextGrid, nextGrid.nextElementSibling)
+                nextGrid.nextElementSibling.dataset.antiMagnet = 'true'
+                nextGrid.nextElementSibling.dataset.ship = shipArray[0]
+            } 
+            
+            if (enemyWaters.children[randomPlacement].dataset.ship == shipArray[0] && enemyWaters.children[randomPlacement].dataset.row == nextGrid.dataset.row
+            && enemyWaters.children[randomPlacement].dataset.row == previousGrid.dataset.row
+            && enemyWaters.children[randomPlacement].dataset.ship == shipArray[0]
+            ) {
+                console.log('ENEMY CLONE', previousGrid, nextGrid, nextGrid.nextElementSibling)
+                nextGrid.style.background = 'red'                                                                             
+                nextGrid.dataset.antiMagnet = 'true'
+                previousGrid.dataset.antiMagnet = 'true';
+                nextGrid.dataset.ship = shipArray[0]
+                previousGrid.dataset.ship = shipArray[0]
                 
                 j++
             } else {
-                console.log('Second else find array', shipArray)
+                console.log('ANGEL FAIL', enemyWaters.children[randomPlacement], nextGrid, shipArray)
+                enemyWaters.children[randomPlacement].style.background = 'transparent'
+                enemyWaters.children[randomPlacement].nextElementSibling.style.background = 'transparent'
+                nextGrid.style.background = 'transparent'
+                nextGrid.previousElementSibling.style.background = 'transparent'
+                nextGrid.nextElementSibling.style.background = 'transparent'
+                delete enemyWaters.children[randomPlacement].dataset.antiMagnet
+                delete enemyWaters.children[randomPlacement].dataset.ship
+                delete enemyWaters.children[randomPlacement].nextElementSibling.dataset.ship
+                delete enemyWaters.children[randomPlacement].nextElementSibling.dataset.antiMagnet
+                delete nextGrid.dataset.ship
+                delete nextGrid.previousElementSibling.dataset.antiMagnet
+                delete nextGrid.previousElementSibling.dataset.ship
+                delete nextGrid.dataset.antiMagnet
+                delete nextGrid.nextElementSibling.dataset.ship
+                delete nextGrid.nextElementSibling.dataset.antiMagnet
+
                 createComputerShips(shipInfo)
                 return
-            }
+            } 
             
             nextGrid.dataset.ship = shipArray[0]
             
-            nextGrid = nextGrid.nextElementSibling
+            if (nextGrid.nextElementSibling && enemyWaters.children[randomPlacement].dataset.row == nextGrid.nextElementSibling.dataset.row && nextGrid.nextElementSibling.dataset.ship != shipArray[0]) {
+                console.log('TITANIC', enemyWaters.children[randomPlacement], nextGrid, nextGrid.nextElementSibling, shipArray)
+                // THIS PREVENTS IT FROM APPEARING SIDE BY SIDE
+                shipArray.unshift(shipArray[0])
+                enemyWaters.children[randomPlacement].style.background = 'transparent';
+                delete enemyWaters.children[randomPlacement].dataset.ship
+                delete enemyWaters.children[randomPlacement].dataset.antiMagnet
+                enemyWaters.children[randomPlacement].nextElementSibling.style.background = 'transparent'
+                delete enemyWaters.children[randomPlacement].nextElementSibling.dataset.ship
+                delete enemyWaters.children[randomPlacement].nextElementSibling.dataset.antiMagnet
+                nextGrid.style.background = 'transparent';
+                delete nextGrid.dataset.ship
+                delete nextGrid.dataset.antiMagnet
+
+
+            }
+           
+
             
+            nextGrid = nextGrid.nextElementSibling
+
         }
         
-        while (i < enemyWaters.children.length ) {
-            let nextRandom = enemyWaters.children[i].nextElementSibling
-            while (nextRandom) {
 
-                console.log('CLONING', enemyWaters.children[i])
+        if (enemyWaters.children[randomPlacement].nextElementSibling.dataset.ship != shipArray[0]) {
+            console.log('KING MAN', enemyWaters.children[randomPlacement])
+            // CHECK IF THIS IS STILL NEEDED
+            enemyWaters.children[randomPlacement].style.background = 'transparent'
+            delete enemyWaters.children[randomPlacement].dataset.antiMagnet
+            delete enemyWaters.children[randomPlacement].dataset.ship
+            createComputerShips(shipInfo)
+            return
+            // THIS CHECKS TO SEE IF ONLY ONE BLOCK APPEARS
+        }
 
-                if (enemyWaters.children[i].style.background != 'red' && enemyWaters.children[i].dataset.row == numbers.indexOf(testRow) + 1
-                && enemyWaters.children[i].nextElementSibling
-                && enemyWaters.children[i].dataset.column == enemyWaters.children[randomPlacement].dataset.column
-                && enemyWaters.children[i].nextElementSibling.dataset.row == enemyWaters.children[i].dataset.row) {
-                    console.log('CLONER', enemyWaters.children[i], enemyWaters.children[i].nextElementSibling, nextRandom)
-                    
-                }
+        if (enemyWaters.children[i].style.background !== 'red' && enemyWaters.children[i].dataset.row == numbers.indexOf(testRow) + 1
+        && enemyWaters.children[i].dataset.column == enemyWaters.children[randomPlacement].dataset.column
+        && enemyWaters.children[i].dataset.row == random.dataset.row
+        && enemyWaters.children[i].dataset.row == previous.dataset.row
+        && random) {
+            console.log('CLONER', enemyWaters.children[i], enemyWaters.children[i].nextElementSibling, random)
+            
+            while (k != shipInfo && random && previous && random.nextElementSibling) {
+                console.log('UP', random, previous)
+                if (random.nextElementSibling.style.background == 'red') console.log('EXPLODE UP', random, enemyWaters.children[i], enemyWaters.children[randomPlacement])
+                
+                random.dataset.antiMagnet = 'true';
+                random.previousElementSibling.dataset.antiMagnet = 'true';
+                random.nextElementSibling.dataset.antiMagnet = 'true';
+                previous.dataset.antiMagnet = 'true';
+                random.dataset.ship = shipArray[0]
+                previous.dataset.ship = shipArray[0]
+                random.previousElementSibling.dataset.ship = shipArray[0]
+                random.nextElementSibling.dataset.ship = shipArray[0]
+                
+                k++
+                random = random.nextElementSibling
+            }
+        } 
+        
+        if (enemyWaters.children[i].style.background !== 'red' && enemyWaters.children[i].dataset.row == numbers.indexOf(testRow) - 1
+        && enemyWaters.children[i].dataset.column == enemyWaters.children[randomPlacement].dataset.column
+        && enemyWaters.children[i].dataset.row == nextRandom.dataset.row
+        && enemyWaters.children[i].dataset.row == previousRandom.dataset.row
+        && nextRandom) {
+            while (p != shipInfo && nextRandom && previousRandom) {
+                console.log('DOWN', nextRandom, previousRandom)
+                // IT WORKS, NOW MAKE THE FUNCTION CALL ITSELF AGAIN AND REMOVE ALL CORRELATIONS
+                // FIX THE PATROL BOAT TO PREVENT IT FROM BEING PLACED DIAGONALLY
+                if (nextRandom.nextElementSibling.style.background == 'red') console.log('EXPLODE DOWN', nextRandom, enemyWaters.children[i], enemyWaters.children[randomPlacement])
+                nextRandom.dataset.antiMagnet = 'true'
+                nextRandom.previousElementSibling.dataset.antiMagnet = 'true';
+                nextRandom.nextElementSibling.dataset.antiMagnet = 'true'
+                previousRandom.dataset.antiMagnet = 'true';
+                
+                nextRandom.dataset.ship = shipArray[0]
+                nextRandom.previousElementSibling.dataset.ship = shipArray[0]
+                nextRandom.nextElementSibling.dataset.ship = shipArray[0]
+                previousRandom.dataset.ship = shipArray[0]
+
+                p++
                 nextRandom = nextRandom.nextElementSibling
             }
-            i++
-            
-        }
-    for (let i = 0; i < enemyWaters.children.length; i++) {
-
-        if (enemyWaters.children[i].dataset.ship == shipArray[0] 
-        ) {
-            enemyWaters.children[i].style.background = 'red'
-            console.log('Check ships', enemyWaters.children[i])
         } 
-
-    }    
+        
+    }
+      
     
 }
 
