@@ -1,5 +1,4 @@
 import CreateShips from '../Functionality/Ship'
-import { carrier, battleShip, destroyer, submarine, patrolBoat } from '../Functionality/Ship'
 
 describe('Ships', () => {
     test('Ship hits', () => {
