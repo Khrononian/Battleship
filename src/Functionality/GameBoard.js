@@ -1,5 +1,4 @@
-import CreateShips from "./Ship";
-import { carrier, battleShip, destroyer, submarine, patrolBoat, accessShips } from '../Functionality/Ship'
+import CreateShips, { ship } from "./Ship";
 
 const GameBoard = () => {
     let newBoard = [
@@ -28,11 +27,7 @@ const GameBoard = () => {
     
     const placeShips = (ship, length, coords, direction) => {
         const createShip = CreateShips(ship, length);
-        const randomHorizontal = Math.floor(Math.random() * board.length) // FOR AI
-        let checkHorizontal = true
-        let addedLength = randomHorizontal + length
-        let verticalLength = [0, 1, 2, 3, 4, 5]
-
+        let checkHorizontal = true // change to direction
         
         // if (checkHorizontal) placeHorizontalAi(ship, addedLength, randomHorizontal) // WORKS, BUT FOR COMPUTER
         
@@ -43,11 +38,51 @@ const GameBoard = () => {
         //             board[row][2] = {name: ship, shot: false}
         //         } -- GETS VERTICALS
 
-        // board[0].push({name: 'Food'}) - TO PLACE IT INTO COORDINATES
+        return board
+    }
+    
+    const placeHorizontalAi = (ship, length) => { // CHANGE THIS TO FOCUS ON COMPUTER SHIPS
+        const direction = ['Horizontal', 'Vertical'];
+        const shipType = [
+            {name: 'Carrier', shot: false, length: 5},
+            {name: 'Battle Ship', shot: false, length: 4},
+            {name: 'Destroyer', shot: false, length: 3},
+            {name: 'Submarine', shot: false, length: 3},
+            {name: 'Patrol Boat', shot: false, length: 2}
+        ]
+        const randomHorizontal = Math.floor(Math.random() * board.length)
+
+        // for (let ship of shipType) {
+        //     let addedLength = randomHorizontal + ship.length
+        //     for (let i = randomHorizontal; i < addedLength; i++) {
+        //         board[i].push({name: ship.name, shot: false})
+                
+        //     }
+        // }
+        
+        let getRandoms = randomHorizontal.toString().split('')
+
+            // for (let ship of shipType) {
+            //         shipName = ship.name
+            //         index = ship.length
+            // }
+
+            for (let row = randomHorizontal; row < randomHorizontal + length; row++) {
+                if (!randomHorizontal[2] && !board[row][2]) board[row][2] = {name: ship, shot: false}
+                else if (board[row][2].name == ship) {
+                    board[row][2] = {name: ship, shot: false}
+                    
+                } else {
+                    placeHorizontalAi(ship, length)
+                    return
+                }
+                
+            }
+        
 
         return board
     }
-
+    
     const placeHorizontal = (ship, length, coords) => {
         for (let row = 0; row < board.length; row++) {
             for (let col = 0; col < length; col++) {
@@ -59,17 +94,11 @@ const GameBoard = () => {
         }
     }
 
-    const placeHorizontalAi = (ship, length, horizontal) => { // CHANGE THIS TO FOCUS ON COMPUTER SHIPS
-        for (let i = horizontal; i < length; i++) {
-            board[i].push({name: ship, shot: false})
-        }
-    }
-
     const placeVertical = () => {
 
     }
 
-    const receiveAttack = (coordinates, determineAttack) => {
+    const receiveAttack = (coordinates) => {
         const hitShip = CreateShips()
 
         for (let i = 0; board.length; i++) {
@@ -90,12 +119,18 @@ const GameBoard = () => {
     }
 
     const checkShipConditions = () => {
-        
+        for (let i = 0; i < board.length; i++) {
+            if (board[i][2]) {
+                if (board[i][2].shot == true) {
+                    return 'ALL SHIPS SUNK' // SEE WHAT TO DO HERE
+                } else return 'NO SUNKY'
+            }  
+        }
     }
 
     
     
-    return { receiveAttack, missedAttacks, checkShipConditions, board, placeShips }
+    return { receiveAttack, missedAttacks, checkShipConditions, board, placeShips, placeHorizontalAi }
 }
 
 export default GameBoard;

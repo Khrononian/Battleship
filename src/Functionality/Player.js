@@ -1,20 +1,19 @@
 import { getGridPosition, allyWaters } from './Dom'
+import GameBoard from './GameBoard'
 
 const Player = () => {
-    return {
-        gamePlayer(playerTurn) {
-            return playerTurn
-        },
-        computerAi(computerTurn) {
+    const getGame = GameBoard()
     
-            // RANDOMLY SELECT GRID CELL AFTER PLAYER'S TURN IS OVER
-            // USE THE DOM FUNCTIONALITY TO CALL THE COMPUTER METHOD
-            // USE MATH RANDOM TO SELECT A RANDOM DIV
-            // USE METHODS/FUNCTIONS TO FIND WHERE BOATS ARE
+    const gamePlayer = (choosePlayer) => {
             
-            return computerTurn
-        }
     }
+        
+     // USE BOTH, PLAYER AND COMPUTER GAMEBOARDS, TO RECORD EACH SHOT ON THEIR BOARD
+    // MAKE SURE CHECK IF A POSITION IS POSSIBLE OR NOT
+    // USE RANDOM FOR COMPUTER TO MAKE RANDOM CHOICES
+            
+            
+    return { gamePlayer }
 }
 
 export default Player

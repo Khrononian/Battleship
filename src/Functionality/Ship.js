@@ -16,6 +16,8 @@ const CreateShips = (shipName, length) => {
 
     const isSunk = (length) => {
         if (hitCoordinates.length == length) {
+            hitCoordinates[2].sunk = true
+
             return sunk = true
         } else return sunk = false
     }
@@ -23,13 +25,7 @@ const CreateShips = (shipName, length) => {
     return { hit, isSunk }
 }
 const ship = CreateShips('Carrier', 5, false);
-const accessShips = CreateShips()
 
-const carrier = CreateShips('Carrier', 5, false);
-const battleShip = CreateShips('Battle Ship', 4, false);
-const destroyer = CreateShips('Destroyer', 3, false);
-const submarine = CreateShips('Submarine', 3, false);
-const patrolBoat = CreateShips('Patrol Boat', 2, false);
 
 export default CreateShips
-export { ship, carrier, battleShip, destroyer, submarine, patrolBoat, accessShips }
+export { ship }
