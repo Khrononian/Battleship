@@ -1,7 +1,4 @@
-
-import CreateShips from '../Functionality/Ship'
 import GameBoard from '../Functionality/GameBoard'
-
 
 let ship
 beforeEach(() => {
@@ -13,25 +10,26 @@ describe('GameBoards', () => {
         expect(ship.board[0]).toStrictEqual([0, 0])
     })
 
-    // test('Placing ships', () => {
-    //     ship.placeShips('Carrier', 5)
-    //     ship.placeShips('Battle Ship', 4)
-    //     ship.placeShips('Destroyer', 3)
-    //     ship.placeShips('Submarine', 3)
-    //     ship.placeShips('Patrol Boat', 2)
+    test('Place Ships Horizontally', () => {
+        ship.placeShips('Carrier', 5, [5, 4], 'Horizontal')
+        ship.placeShips('Battle Ship', 4, [3, 0], 'Horizontal')
+        ship.placeShips('Destroyer', 3, [8, 1], 'Horizontal')
+        ship.placeShips('Submarine', 3, [7, 4], 'Horizontal')
+        ship.placeShips('Patrol Boat', 2, [2, 5], 'Horizontal')
 
-        
-    //     expect(ship.board).toContain([0, 0]) // toStrictEqual
-    // })
+        expect(ship.board[25]).toEqual([2, 5, {name: 'Patrol Boat', shot: false}])
+        expect(ship.board[26]).toEqual([2, 6, {name: 'Patrol Boat', shot: false}])
+    })
 
-    test('Place Ships', () => {
-        ship.placeShips('Carrier', 5, [5, 4])
-        ship.placeShips('Battle Ship', 4, [3, 0])
-        ship.placeShips('Destroyer', 3, [8, 1])
-        ship.placeShips('Submarine', 3, [7, 4])
-        
+    test('Place Ships Verically', () => {
+        ship.placeShips('Carrier', 5, [1, 2], 'Vertical')
+        ship.placeShips('Battle Ship', 4, [3, 0], 'Vertical')
+        ship.placeShips('Destroyer', 3, [1, 9], 'Vertical')
+        ship.placeShips('Submarine', 3, [4, 4], 'Vertical')
+        ship.placeShips('Patrol Boat', 2, [7, 6], 'Vertical')
 
-        expect(ship.placeShips('Patrol Boat', 2, [2, 5])).toContainEqual([2, 5, {name: 'Patrol Boat', shot: false}])
+        expect(ship.board[76]).toEqual([7, 6, {name: 'Patrol Boat', shot: false}])
+        expect(ship.board[86]).toEqual([8, 6, {name: 'Patrol Boat', shot: false}])
     })
 
     test('Place AI ships', () => {
@@ -44,28 +42,31 @@ describe('GameBoards', () => {
         ]
         
         for (let aiShip of aiShips) {
-            ship.placeHorizontalAi(aiShip.name, aiShip.length)
+            ship.placeComputerShips(aiShip.name, aiShip.length)
+            
         }
 
-        expect(ship.placeHorizontalAi()).toEqual(ship.board)
-        
-        // USE PLAYER FACTORY TO PLACE AI SHIPS AFTER TESTING HERE
+        expect(ship.placeComputerShips()).toEqual(ship.board)
     })
 
     test('Records missed attack', () => {
-        expect(ship.receiveAttack([0, 0])).toContainEqual([0, 0])
+        ship.placeShips('Patrol Boat', 2, [1, 4], 'Vertical')
+        
+        expect(ship.receiveAttack([0, 1])).toContainEqual([0, 1, { missed: true }])
     })
 
     test('Records attacked ship', () => {
-        expect(ship.receiveAttack([0, 4, {name: 'Carrier', shot: false}])).toContainEqual([0, 4, {name: 'Carrier', shot: true}])
+        ship.placeShips('Carrier', 5, [0, 4], 'Horizontal')
+        ship.receiveAttack([0, 4])
+        expect(ship.board[4]).toStrictEqual([0, 4, {name: 'Carrier', shot: true}])
     })
 
     test('Check all ship conditions', () => {
-        ship.placeShips('Carrier', 5, [5, 4])
-        ship.placeShips('Battle Ship', 4, [3, 0])
-        ship.placeShips('Destroyer', 3, [8, 1])
-        ship.placeShips('Submarine', 3, [7, 4])
-        ship.placeShips('Patrol Boat', 2, [2, 5])
+        ship.placeShips('Carrier', 5, [5, 4], 'Horizontal')
+        ship.placeShips('Battle Ship', 4, [3, 0], 'Horizontal')
+        ship.placeShips('Destroyer', 3, [8, 1], 'Horizontal')
+        ship.placeShips('Submarine', 3, [7, 4], 'Vertical')
+        ship.placeShips('Patrol Boat', 2, [2, 5], 'Vertical')
 
         for (let i = 0; i < ship.board.length; i++) {
             if (ship.board[i][2]) {
@@ -73,6 +74,21 @@ describe('GameBoards', () => {
             }
         }
 
-        expect(ship.checkShipConditions()).toBe('FOOD')
+        expect(ship.checkShipConditions()).toBeTruthy()
+    })
+
+    test('Condition check should be false', () => {
+        ship.placeShips('Carrier', 5, [5, 4], 'Horizontal')
+        ship.placeShips('Battle Ship', 4, [3, 0], 'Horizontal')
+        ship.placeShips('Destroyer', 3, [8, 1], 'Horizontal')
+        ship.placeShips('Submarine', 3, [7, 4], 'Vertical')
+
+        for (let i = 0; i < ship.board.length; i++) {
+            if (ship.board[i][2]) {
+                ship.receiveAttack(ship.board[i])
+            }
+        }
+
+        expect(ship.checkShipConditions()).toBeFalsy()
     })
 })
