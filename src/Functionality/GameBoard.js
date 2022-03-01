@@ -1,4 +1,4 @@
-import CreateShips, { ship } from "./Ship";
+import CreateShips from "./Ship";
 
 const GameBoard = () => {
     let newBoard = [
@@ -15,6 +15,7 @@ const GameBoard = () => {
     ]
     
     const missedBlasts = []
+    const shipAttacks = []
     const board = [];
     
     (() => {
@@ -26,60 +27,96 @@ const GameBoard = () => {
     })()
     
     const placeShips = (ship, length, coords, direction) => {
-        const createShip = CreateShips(ship, length);
-        let checkHorizontal = true // change to direction
-        
-        // if (checkHorizontal) placeHorizontalAi(ship, addedLength, randomHorizontal) // WORKS, BUT FOR COMPUTER
-        
-        if (checkHorizontal) placeHorizontal(ship, length, coords)
-        else placeVertical()
-
-        // if (board[row][1] == coords[1] - length) {
-        //             board[row][2] = {name: ship, shot: false}
-        //         } -- GETS VERTICALS
+        if (direction == 'Horizontal') placeHorizontal(ship, length, coords)
+        else placeVertical(ship, coords)
 
         return board
     }
     
-    const placeHorizontalAi = (ship, length) => { // CHANGE THIS TO FOCUS ON COMPUTER SHIPS
-        const direction = ['Horizontal', 'Vertical'];
-        const shipType = [
-            {name: 'Carrier', shot: false, length: 5},
-            {name: 'Battle Ship', shot: false, length: 4},
-            {name: 'Destroyer', shot: false, length: 3},
-            {name: 'Submarine', shot: false, length: 3},
-            {name: 'Patrol Boat', shot: false, length: 2}
-        ]
-        const randomHorizontal = Math.floor(Math.random() * board.length)
+    const placeComputerShips = (ship, length) => { // CHANGE THIS TO FOCUS ON COMPUTER SHIP
+        const direction = ['Horizonal', 'Vertical']
+        const randomView = Math.floor(Math.random() * direction.length)
+        const random = board[Math.floor(Math.random() * board.length)]
 
-        // for (let ship of shipType) {
-        //     let addedLength = randomHorizontal + ship.length
-        //     for (let i = randomHorizontal; i < addedLength; i++) {
-        //         board[i].push({name: ship.name, shot: false})
-                
-        //     }
-        // }
-        
-        let getRandoms = randomHorizontal.toString().split('')
-
-            // for (let ship of shipType) {
-            //         shipName = ship.name
-            //         index = ship.length
-            // }
-
-            for (let row = randomHorizontal; row < randomHorizontal + length; row++) {
-                if (!randomHorizontal[2] && !board[row][2]) board[row][2] = {name: ship, shot: false}
-                else if (board[row][2].name == ship) {
-                    board[row][2] = {name: ship, shot: false}
+        if (direction[randomView] == 'Horizonal') {
+            for (let col = 0; col < board.length; col++) {  
+                for (let row = 0; row < length; row++) {
+                    if (!random[2] && ship !== undefined) {
+                        // random[2] = {name: ship, shot: false}
+                        if (random[1] > 5 && ship == 'Carrier') {
+                            delete random[2]
+                            placeComputerShips(ship, length)
+                            return
+                        } else random[2] = {name: ship, shot: false}
+                        if (random[1] > 6 && ship == 'Battle Ship') {
+                            delete random[2]
+                            placeComputerShips(ship, length)
+                            return
+                        } else random[2] = {name: ship, shot: false} 
+                        if (random[1] > 7 && ship == 'Destroyer') {
+                            delete random[2]
+                            placeComputerShips(ship, length)
+                            return
+                        } else random[2] = {name: ship, shot: false} 
+                        if (random[1] > 7 && ship == 'Submarine') {
+                            delete random[2]
+                            placeComputerShips(ship, length)
+                            return
+                        } else random[2] = {name: ship, shot: false} 
+                        if (random[1] > 8 && ship == 'Patrol Boat') {
+                            delete random[2]
+                            placeComputerShips(ship, length)
+                            return
+                        } else random[2] = {name: ship, shot: false}
+                    }
+                    if (board[col][1] == random[1] && board[col + row][0] == random[0]) {
+                        board[col + row][2] = {name: ship, shot: false}     
                     
-                } else {
-                    placeHorizontalAi(ship, length)
-                    return
+                    } 
                 }
-                
             }
-        
-
+        } else {
+            for (let i = 0; i < board.length; i++) {
+                if (!random[2] && ship !== undefined) {
+                    if (random[0] > 5 && ship == 'Carrier') {
+                        delete random[2]
+                        placeComputerShips(ship, length)
+                        return
+                    } else random[2] = {name: ship, shot: false}
+                    if (random[0] > 6 && ship == 'Battle Ship') {
+                        delete random[2]
+                        placeComputerShips(ship, length)
+                        return
+                    } else random[2] = {name: ship, shot: false} 
+                    if (random[0] > 7 && ship == 'Destroyer') {
+                        delete random[2]
+                        placeComputerShips(ship, length)
+                        return
+                    } else random[2] = {name: ship, shot: false} 
+                    if (random[0] > 7 && ship == 'Submarine') {
+                        delete random[2]
+                        placeComputerShips(ship, length)
+                        return
+                    } else random[2] = {name: ship, shot: false} 
+                    if (random[0] > 8 && ship == 'Patrol Boat') {
+                        delete random[2]
+                        placeComputerShips(ship, length)
+                        return
+                    } else random[2] = {name: ship, shot: false} 
+                } 
+                if (board[i][0] == random[0] && board[i][1] == random[1] && ship !== undefined && board[i][2].name == 'Carrier') {
+                    for (let k = 0; k < 4; k++) board[i += 10][2] = {name: ship, shot: false}
+                } else if (board[i][0] == random[0] && board[i][1] == random[1] && ship !== undefined && board[i][2].name == 'Battle Ship') {
+                    for (let k = 0; k < 3; k++) board[i += 10][2] = {name: ship, shot: false}
+                } else if (board[i][0] == random[0] && board[i][1] == random[1] && ship !== undefined && board[i][2].name == 'Destroyer') {
+                    for (let k = 0; k < 2; k++) board[i += 10][2] = {name: ship, shot: false}
+                } else if (board[i][0] == random[0] && board[i][1] == random[1] && ship !== undefined && board[i][2].name == 'Submarine') {
+                    for (let k = 0; k < 2; k++) board[i += 10][2] = {name: ship, shot: false}
+                } else if (board[i][0] == random[0] && board[i][1] == random[1] && ship !== undefined && board[i][2].name == 'Patrol Boat') {
+                    for (let k = 0; k < 1; k++) board[i += 10][2] = {name: ship, shot: false}
+                }
+            }
+        }
         return board
     }
     
@@ -89,48 +126,65 @@ const GameBoard = () => {
                 if (board[row][0] == coords[0] && board[row][1] == coords[1]
                 && board[row + col][0] == coords[0]) {
                     board[row + col][2] = {name: ship, shot: false}
-                } 
+                }
             }
         }
     }
 
-    const placeVertical = () => {
+    const placeVertical = (ship, coords) => {
+        let row = coords[0];
+        let col = coords[1];
+    
+        for (let k = 0; k < board.length; k++) {   
+            if (board[k][0] == row && board[k][1] == col) {
+                board[k][2] = {name: ship, shot: false} 
+                board[k += 10][2] = {name: ship, shot: false}
 
+                if (board[k][2].name == 'Carrier') {
+                    for (let i = 0; i < 3; i++) board[k += 10][2] = {name: ship, shot: false}
+                } else if (board[k][2].name == 'Battle Ship') {
+                    for (let i = 0; i < 2; i++) board[k += 10][2] = {name: ship, shot: false}
+                } else if (board[k][2].name == 'Destroyer') {
+                    for(let i = 0; i < 1; i++) board[k += 10][2] = {name: ship, shot: false}
+                } else if (board[k][2].name == 'Submarine') {
+                    for(let i = 0; i < 1; i++) board[k += 10][2] = {name: ship, shot: false}
+                } else return
+            }
+        }
     }
 
     const receiveAttack = (coordinates) => {
         const hitShip = CreateShips()
 
         for (let i = 0; board.length; i++) {
-            if (coordinates[2]) {
-                if (board[i][0] == coordinates[0] && board[i][1] == coordinates[1]) {
-                    coordinates[2].shot = true
-                    return hitShip.hit(coordinates)
-                } 
-            } else return missedAttacks(coordinates)
+            if (board[i][0] === coordinates[0] && board[i][1] === coordinates[1]) {
+                if (board[i].length == 3 && board[i][2].shot !== true) board[i][2].shot = true
+                else if (board[i].length < 3) missedAttacks(coordinates)
+                else return 'ALREADY SHOT'
+
+                shipAttacks.push(board[i])
+                return hitShip.hit(coordinates)
+            }       
         }
-        
     }
 
     const missedAttacks = missedShots => {
+        missedShots[2] = { missed: true }
         missedBlasts.push(missedShots)
         
         return missedBlasts
     }
 
     const checkShipConditions = () => {
-        for (let i = 0; i < board.length; i++) {
-            if (board[i][2]) {
-                if (board[i][2].shot == true) {
-                    return 'ALL SHIPS SUNK' // SEE WHAT TO DO HERE
-                } else return 'NO SUNKY'
-            }  
-        }
+        return shipAttacks.every(ship => {
+            if (shipAttacks.length == 17 && ship[2].shot == true) {
+                return ship
+            } 
+        })
+        
     }
 
-    
-    
-    return { receiveAttack, missedAttacks, checkShipConditions, board, placeShips, placeHorizontalAi }
+    return { receiveAttack, missedAttacks, checkShipConditions, board, placeShips, placeComputerShips }
 }
 
 export default GameBoard;
