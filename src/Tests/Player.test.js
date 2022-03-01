@@ -1,4 +1,3 @@
-import GameBoard from '../Functionality/GameBoard'
 import Player from '../Functionality/Player'
 
 let player;
