@@ -38,85 +38,108 @@ const GameBoard = () => {
         const randomView = Math.floor(Math.random() * direction.length)
         const random = board[Math.floor(Math.random() * board.length)]
 
-        if (direction[randomView] == 'Horizonal') {
-            for (let col = 0; col < board.length; col++) {  
-                for (let row = 0; row < length; row++) {
-                    if (!random[2] && ship !== undefined) {
-                        // random[2] = {name: ship, shot: false}
-                        if (random[1] > 5 && ship == 'Carrier') {
-                            delete random[2]
-                            placeComputerShips(ship, length)
-                            return
-                        } else random[2] = {name: ship, shot: false}
-                        if (random[1] > 6 && ship == 'Battle Ship') {
-                            delete random[2]
-                            placeComputerShips(ship, length)
-                            return
-                        } else random[2] = {name: ship, shot: false} 
-                        if (random[1] > 7 && ship == 'Destroyer') {
-                            delete random[2]
-                            placeComputerShips(ship, length)
-                            return
-                        } else random[2] = {name: ship, shot: false} 
-                        if (random[1] > 7 && ship == 'Submarine') {
-                            delete random[2]
-                            placeComputerShips(ship, length)
-                            return
-                        } else random[2] = {name: ship, shot: false} 
-                        if (random[1] > 8 && ship == 'Patrol Boat') {
-                            delete random[2]
-                            placeComputerShips(ship, length)
-                            return
-                        } else random[2] = {name: ship, shot: false}
-                    }
-                    if (board[col][1] == random[1] && board[col + row][0] == random[0]) {
-                        board[col + row][2] = {name: ship, shot: false}     
+        // if (direction[randomView] == 'Horizonal') {
+        //     for (let col = 0; col < board.length; col++) {  
+        //         for (let row = 0; row < length; row++) {
+        //                 if (random[1] > 5 ) {
+
+        //                     placeComputerShips(ship, length)
+        //                     return board
+        //                 } else if (!random[2] && ship == 'Carrier') random[2] = {name: ship, shot: false}
+        //                 if (random[1] > 6 && random[2] ) {
+
+        //                     placeComputerShips(ship, length)
+        //                     return board
+        //                 } else if (!random[2] && ship == 'Battle Ship') {
+                            
+        //                     random[2] = {name: ship, shot: false} 
+        //                 } 
+                        
+        //                 if (random[1] > 7 && random[2] ) {
+
+        //                     placeComputerShips(ship, length)
+        //                     return board
+        //                 } else if (!random[2] && ship == 'Destroyer') {
+        //                     random[2] = {name: ship, shot: false}
+        //                 } 
+                          
+        //                 if (random[1] > 7 && random[2] ) {
+
+        //                     placeComputerShips(ship, length)
+        //                     return board
+        //                 } else if (!random[2] && ship == 'Submarine') {
+        //                     random[2] = {name: ship, shot: false} 
+        //                 } 
+                         
+        //                 if (random[1] > 8 && random[2] ) {
+
+        //                     placeComputerShips(ship, length)
+        //                     return board
+        //                 } else if (!random[2] && ship == 'Patrol Boat') {
+        //                     random[2] = {name: ship, shot: false}
+        //                 } 
+                         
                     
-                    } 
-                }
-            }
-        } else {
-            for (let i = 0; i < board.length; i++) {
-                if (!random[2] && ship !== undefined) {
-                    if (random[0] > 5 && ship == 'Carrier') {
-                        delete random[2]
-                        placeComputerShips(ship, length)
-                        return
-                    } else random[2] = {name: ship, shot: false}
-                    if (random[0] > 6 && ship == 'Battle Ship') {
-                        delete random[2]
-                        placeComputerShips(ship, length)
-                        return
-                    } else random[2] = {name: ship, shot: false} 
-                    if (random[0] > 7 && ship == 'Destroyer') {
-                        delete random[2]
-                        placeComputerShips(ship, length)
-                        return
-                    } else random[2] = {name: ship, shot: false} 
-                    if (random[0] > 7 && ship == 'Submarine') {
-                        delete random[2]
-                        placeComputerShips(ship, length)
-                        return
-                    } else random[2] = {name: ship, shot: false} 
-                    if (random[0] > 8 && ship == 'Patrol Boat') {
-                        delete random[2]
-                        placeComputerShips(ship, length)
-                        return
-                    } else random[2] = {name: ship, shot: false} 
-                } 
-                if (board[i][0] == random[0] && board[i][1] == random[1] && ship !== undefined && board[i][2].name == 'Carrier') {
-                    for (let k = 0; k < 4; k++) board[i += 10][2] = {name: ship, shot: false}
-                } else if (board[i][0] == random[0] && board[i][1] == random[1] && ship !== undefined && board[i][2].name == 'Battle Ship') {
-                    for (let k = 0; k < 3; k++) board[i += 10][2] = {name: ship, shot: false}
-                } else if (board[i][0] == random[0] && board[i][1] == random[1] && ship !== undefined && board[i][2].name == 'Destroyer') {
-                    for (let k = 0; k < 2; k++) board[i += 10][2] = {name: ship, shot: false}
-                } else if (board[i][0] == random[0] && board[i][1] == random[1] && ship !== undefined && board[i][2].name == 'Submarine') {
-                    for (let k = 0; k < 2; k++) board[i += 10][2] = {name: ship, shot: false}
-                } else if (board[i][0] == random[0] && board[i][1] == random[1] && ship !== undefined && board[i][2].name == 'Patrol Boat') {
-                    for (let k = 0; k < 1; k++) board[i += 10][2] = {name: ship, shot: false}
-                }
-            }
-        }
+        //             // if (board[col][1] == random[1] && board[col + row][0] == random[0]) {
+        //             //     board[col + row][2] = {name: ship, shot: false}   
+        //             // } 
+        //         }
+        //     }
+        // } else {
+        //     for (let i = 0; i < board.length; i++) {
+        //         // if (!random[2] && ship !== undefined) {
+        //             if (random[0] > 5 ) {
+
+        //                 placeComputerShips(ship, length)
+        //                 return board
+        //             } else random[2] = {name: ship, shot: false}
+        //             if (random[0] > 6 && random[2] ) {
+
+        //                 placeComputerShips(ship, length)
+        //                 return board
+        //             } else if (!random[2] && ship == 'Battle Ship') {
+        //                 random[2] = {name: ship, shot: false}
+        //             } 
+                     
+        //             if (random[0] > 7 && random[2] ) {
+
+        //                 placeComputerShips(ship, length)
+        //                 return board
+        //             } else if (!random[2] && ship == 'Destroyer') {
+        //                 random[2] = {name: ship, shot: false}
+        //             } 
+                     
+        //             if (random[0] > 7 && random[2] ) {
+
+        //                 placeComputerShips(ship, length)
+        //                 return board
+        //             } else if (!random[2] && ship == 'Submarine') {
+        //                 random[2] = {name: ship, shot: false}
+        //             } 
+                      
+        //             if (random[0] > 8 && random[2] ) {
+
+        //                 placeComputerShips(ship, length)
+        //                 return board
+        //             } else if (!random[2] && ship == 'Patrol Boat') {
+        //                 random[2] = {name: ship, shot: false} 
+        //             } 
+                    
+        //         // } // CHECK IF IT GOES INTO THE SAME POSITIONED SHIP PLACED
+        //         if ( board[i][0] == random[0] && board[i][1] == random[1] && ship !== undefined && board[i][2].name == 'Carrier') {
+        //             for (let k = 0; k < 4; k++) board[i += 10][2] = {name: ship, shot: false}
+        //         }  if ( board[i][0] == random[0] && board[i][1] == random[1] && ship !== undefined && board[i][2].name == 'Battle Ship') {
+        //             for (let k = 0; k < 3; k++) board[i += 10][2] = {name: ship, shot: false}
+        //         }  if ( board[i][0] == random[0] && board[i][1] == random[1] && ship !== undefined && board[i][2].name == 'Destroyer') {
+        //             for (let k = 0; k < 2; k++) board[i += 10][2] = {name: ship, shot: false}
+        //         }  if ( board[i][0] == random[0] && board[i][1] == random[1] && ship !== undefined && board[i][2].name == 'Submarine') {
+        //             for (let k = 0; k < 2; k++) board[i += 10][2] = {name: ship, shot: false}
+        //         }  if ( board[i][0] == random[0] && board[i][1] == random[1] && ship !== undefined && board[i][2].name == 'Patrol Boat') {
+        //             for (let k = 0; k < 1; k++) board[i += 10][2] = {name: ship, shot: false}
+        //         }
+        //     }
+        // }
+        
         return board
     }
     
@@ -184,7 +207,15 @@ const GameBoard = () => {
         
     }
 
-    return { receiveAttack, missedAttacks, checkShipConditions, board, placeShips, placeComputerShips }
+    return { 
+        receiveAttack, 
+        missedAttacks, 
+        checkShipConditions, 
+        board, placeShips, 
+        placeComputerShips,
+        placeHorizontal,
+        placeVertical
+    }
 }
 
 export default GameBoard;
