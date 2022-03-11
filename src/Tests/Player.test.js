@@ -8,10 +8,10 @@ beforeEach(() => {
 
 describe('Players', () => {
     test('Attack enemy', () => {
-        player.human.placeShips('Carrier', 5, [0, 4])
-        player.attackPlayer('Human', [0, 4])
+        player.computer.placeShips('Carrier', 5, [0, 4])
 
-        expect(player.human.board[4]).toEqual([0, 4, {name: 'Carrier', shot: true}])
+        // expect(player.human.board[4]).toEqual([0, 4, {name: 'Carrier', shot: true}])
+        expect(player.attackPlayer('Human', [0, 4])).toBe('CHECK')
     })
 
     test('Same shot not possible', () => {

@@ -64,8 +64,8 @@ describe('GameBoards', () => {
 
     test('Records attacked ship', () => {
         ship.placeShips('Carrier', 5, [0, 4], 'Horizontal')
-        ship.receiveAttack([0, 4])
-        expect(ship.board[4]).toStrictEqual([0, 4, {name: 'Carrier', shot: true}])
+
+        expect(ship.receiveAttack([0, 4])).toBe('FOOD')
     })
 
     test('Check all ship conditions', () => {
