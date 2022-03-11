@@ -5,11 +5,10 @@ const Player = () => {
     const computer = GameBoard();
     
     const attackPlayer = (player, coordinates) => {
-        const attackHuman = human.receiveAttack(coordinates);
-        const attackComputer = computer.receiveAttack(coordinates);
+        
 
-        if (player == 'Human') return attackHuman
-        else return attackComputer
+        if (player == 'Human') return computer.receiveAttack(coordinates);
+        else return human.receiveAttack(coordinates);
     }
     
     const restartPlayers = (player) => {

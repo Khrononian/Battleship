@@ -180,15 +180,21 @@ const GameBoard = () => {
         const hitShip = CreateShips()
 
         for (let i = 0; board.length; i++) {
-            if (board[i][0] === coordinates[0] && board[i][1] === coordinates[1]) {
-                if (board[i].length == 3 && board[i][2].shot !== true) board[i][2].shot = true
-                else if (board[i].length < 3) missedAttacks(coordinates)
-                else return 'ALREADY SHOT'
-
-                shipAttacks.push(board[i])
-                return hitShip.hit(coordinates)
-            }       
+            if (board[i][0] == coordinates[0] && board[i][1] == coordinates[1]) {
+                
+                if (board[i].length == 3) {
+                    if (board[i][2].shot == true) return 'ALREADY SHOT'
+                    
+                    board[i][2].shot = true
+                    shipAttacks.push(board[i])
+                    
+                    return board[i]
+                } else if (board[i].length == 2) return missedAttacks(coordinates)
+            } 
+            // else missedAttacks(coordinates)
+            
         }
+        
     }
 
     const missedAttacks = missedShots => {
@@ -199,11 +205,13 @@ const GameBoard = () => {
     }
 
     const checkShipConditions = () => {
-        return shipAttacks.every(ship => {
-            if (shipAttacks.length == 17 && ship[2].shot == true) {
-                return ship
-            } 
-        })
+        if (shipAttacks.length == 17 && shipAttacks.every(ship => ship[2].name && ship[2].shot == true)) return 'FOOD'
+        else return false
+        // return shipAttacks.every(ship => {
+        //     if (shipAttacks.length == 17 && ship[2].shot == true) {
+        //         return 'FOOD'
+        //     } 
+        // })
         
     }
 
@@ -214,7 +222,9 @@ const GameBoard = () => {
         board, placeShips, 
         placeComputerShips,
         placeHorizontal,
-        placeVertical
+        placeVertical,
+        shipAttacks,
+        missedBlasts
     }
 }
 
