@@ -65,10 +65,10 @@ describe('GameBoards', () => {
     test('Records attacked ship', () => {
         ship.placeShips('Carrier', 5, [0, 4], 'Horizontal')
 
-        expect(ship.receiveAttack([0, 4])).toBe('FOOD')
+        expect(ship.receiveAttack([0, 4])).toContainEqual([0, 4, {name: 'Carrier', shot: true}])
     })
 
-    test('Check all ship conditions', () => {
+    test('Check all ship conditions should be true', () => {
         ship.placeShips('Carrier', 5, [5, 4], 'Horizontal')
         ship.placeShips('Battle Ship', 4, [3, 0], 'Horizontal')
         ship.placeShips('Destroyer', 3, [8, 1], 'Horizontal')
