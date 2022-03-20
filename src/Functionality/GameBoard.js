@@ -28,7 +28,7 @@ const GameBoard = () => {
     
     const placeShips = (ship, length, coords, direction) => {
         if (direction == 'Horizontal') placeHorizontal(ship, length, coords)
-        else placeVertical(ship, coords)
+        else placeVertical(ship, length, coords)
 
         return board
     }
@@ -147,54 +147,60 @@ const GameBoard = () => {
         for (let row = 0; row < board.length; row++) {
             for (let col = 0; col < length; col++) {
                 if (board[row][0] == coords[0] && board[row][1] == coords[1]
-                && board[row + col][0] == coords[0]) {
+                && board[row + col] && board[row + col][0] == coords[0]) {
                     board[row + col][2] = {name: ship, shot: false}
                 }
             }
         }
     }
 
-    const placeVertical = (ship, coords) => {
+    const placeVertical = (ship, length, coords) => {
         let row = coords[0];
         let col = coords[1];
     
-        for (let k = 0; k < board.length; k++) {   
-            if (board[k][0] == row && board[k][1] == col) {
-                board[k][2] = {name: ship, shot: false} 
-                board[k += 10][2] = {name: ship, shot: false}
-
-                if (board[k][2].name == 'Carrier') {
-                    for (let i = 0; i < 3; i++) board[k += 10][2] = {name: ship, shot: false}
-                } else if (board[k][2].name == 'Battle Ship') {
-                    for (let i = 0; i < 2; i++) board[k += 10][2] = {name: ship, shot: false}
-                } else if (board[k][2].name == 'Destroyer') {
-                    for(let i = 0; i < 1; i++) board[k += 10][2] = {name: ship, shot: false}
-                } else if (board[k][2].name == 'Submarine') {
-                    for(let i = 0; i < 1; i++) board[k += 10][2] = {name: ship, shot: false}
-                } else return
+        for (let k = 0; k < board.length; k++) {
+            for (let p = 10; p < length * 10 ; p += 10) {
+                if (board[k][0] == row && board[k][1] == col && board[k + p]) {
+                    board[k][2] = {name: ship, shot: false} 
+                    board[k + p][2] = {name: ship, shot: false}
+                    
+                    // if (board[k][2].name == 'Carrier') {
+                    //     for (let i = 0; i < 4; i++) board[k += 10][2] = {name: ship, shot: false}
+                    // } 
+                    // if (board[k][2].name == 'Battle Ship') {
+                    //     for (let i = 0; i < 3; i++) board[k += 10][2] = {name: ship, shot: false}
+                    // } 
+                    // if (board[k][2].name == 'Destroyer') {
+                    //     for(let i = 0; i < 2; i++) board[k += 10][2] = {name: ship, shot: false}
+                    // } 
+                    // if (board[k][2].name == 'Submarine') {
+                    //     for(let i = 0; i < 2; i++) board[k += 10][2] = {name: ship, shot: false}
+                    // } 
+                    // if (board[k][2].name == 'Patrol Boat') {
+                    //     for(let i = 0; i < 1; i++) board[k += 10][2] = {name: ship, shot: false}
+                    // } 
+                }
             }
         }
     }
 
     const receiveAttack = (coordinates) => {
-        const hitShip = CreateShips()
-
         for (let i = 0; board.length; i++) {
             if (board[i][0] == coordinates[0] && board[i][1] == coordinates[1]) {
                 
                 if (board[i].length == 3) {
                     if (board[i][2].shot == true) return 'ALREADY SHOT'
-                    
-                    board[i][2].shot = true
-                    shipAttacks.push(board[i])
-                    
-                    return board[i]
+                    if (board[i][2].name) {
+                        board[i][2].shot = true
+                        shipAttacks.push(board[i])
+                    }
+                    return shipAttacks
                 } else if (board[i].length == 2) return missedAttacks(coordinates)
             } 
             // else missedAttacks(coordinates)
             
         }
-        
+        // return shipAttacks
     }
 
     const missedAttacks = missedShots => {
@@ -205,7 +211,7 @@ const GameBoard = () => {
     }
 
     const checkShipConditions = () => {
-        if (shipAttacks.length == 17 && shipAttacks.every(ship => ship[2].name && ship[2].shot == true)) return 'FOOD'
+        if (shipAttacks.length == 17 && shipAttacks.every(ship => ship[2].name && ship[2].shot == true)) return true
         else return false
         // return shipAttacks.every(ship => {
         //     if (shipAttacks.length == 17 && ship[2].shot == true) {

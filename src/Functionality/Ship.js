@@ -1,6 +1,5 @@
-const CreateShips = (shipName, length) => {
+const CreateShips = () => {
     const hitCoordinates = [];
-    let sunk = false;
 
     const hit = num => {
         if (hitCoordinates.indexOf(num) == -1) {
@@ -14,13 +13,11 @@ const CreateShips = (shipName, length) => {
         if (hitCoordinates.length == length) {
             hitCoordinates[2].sunk = true
 
-            return sunk = true
-        } else return sunk = false
+            return true
+        } else return false
     }
 
     return { hit, isSunk }
 }
-const ship = CreateShips('Carrier', 5, false);
 
 export default CreateShips
-export { ship }
