@@ -10,7 +10,7 @@ h1 {
 }
 
 body {
-    height: 100%;
+    min-height: 100%;
     position: relative;
 }
 
@@ -88,11 +88,13 @@ header, .contain {
 
 .overlay {
     text-align: center;
+    color: white;
 }
 
 p {
     margin: 1rem 0;
-    font-size: 1.45rem;
+    font-size: 1.4rem;
+    font-weight: bold;
 }
 
 .ship-zone {
@@ -115,4 +117,39 @@ p {
 
 .grid-ships {
     cursor: pointer;
+}
+
+.restart {
+    background: silver;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    width: 290px;
+    height: 230px;
+    padding: 1em;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    text-align: center;
+}
+
+.restart h3 {
+    font-size: 1.6rem;
+    color: black;
+}
+
+.restart-btn {
+    margin: 0 auto;
+    padding: .9em;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: .9rem;
+    border-color: black;
+    transition: padding ease .4s
+}
+
+.restart-btn:hover {
+    padding: 1.1em;
 }
