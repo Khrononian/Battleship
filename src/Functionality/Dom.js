@@ -9,14 +9,14 @@ const restartBtn = document.querySelector('.restart-btn');
 const player = Player()
 const shipLengths = [5, 4, 3, 3, 2]
 const array = [];
-const shipArray = [
+let shipArray = [
     {name: 'Carrier', length: 5},
     {name: 'Battle Ship', length: 4},
     {name: 'Destroyer', length: 3},
     {name: 'Submarine', length: 3},
     {name: 'Patrol Boat', length: 2}
 ]
-const shipCopy = []
+let shipCopy = []
 
 const loadGridBlocks = () => {
     for (let i = 0; i < 100; i++) {
@@ -68,19 +68,6 @@ const hoverShipPlacements = event => {
             while (upper != shipLengths[0] && nextInnerGridCell) { // CHANGE THIS TO A UNIVERSAL SHIP LENGTH
                 if (shipBlocks.children[upper] && event.target.dataset.row == nextInnerGridCell.dataset.row ) shipBlocks.children[upper].dataset.column = nextInnerGridCell.dataset.column - 1 
                 else if (shipBlocks.lastElementChild.previousElementSibling.dataset.column == 8) shipBlocks.lastElementChild.dataset.column = 9;
-                
-                // if (shipBlocks.children.length > 3) {
-                //     shipBlocks.children[upper].dataset.antiMagnet = nextInnerGridCell.dataset.antiMagnet
-                //     shipBlocks.lastElementChild.dataset.antiMagnet = 'undefined'
-                // }
-                // else {
-                //     shipBlocks.lastElementChild.dataset.antiMagnet = event.target.nextElementSibling.dataset.antiMagnet
-                //     hoverMagnet = false
-                // }
-                
-                // if (!shipBlocks.children[upper].dataset.antiMagnet || shipBlocks.children[upper].dataset.antiMagnet == 'undefined' || !event.target.dataset.antiMagnet ){
-                //     hoverMagnet = false
-                // }
 
                 upper++
                 nextInnerGridCell = nextInnerGridCell.nextElementSibling
@@ -103,14 +90,13 @@ const hoverOutShipPlacements = event => {
     }
 }
 
-
 const placeComputerShips = () => {
     const direction = ['Horizontal', 'Vertical']
     const randomView = Math.floor(Math.random() * direction.length)
     const random = player.computer.board[Math.floor(Math.random() * player.computer.board.length)]
     
     if (direction[randomView] == 'Horizontal') {
-        console.log('GET RANDOM', random, random[1] + 1)
+        // console.log('GET RANDOM', random, random[1] + 1)
         if (random.length == 3) {
             placeComputerShips()
             return
@@ -130,129 +116,144 @@ const placeComputerShips = () => {
         console.log('BOARD', player.computer.board)
         for (let i = 0; i < enemyWaters.children.length; i++) {
             for (let k = 0; k < player.computer.board.length; k++) {
-                for (let col = 0; col < shipArray[0].length; col++) { 
+                // for (let col = 0; col < shipArray[0].length; col++) { 
                     if (random[1] > 5 && shipArray[0].name == 'Carrier') {  
+                        random.length = 2
                         placeComputerShips()
+                        
                         return player.computer.board
-                    } else {
-                        player.computer.placeHorizontal(shipArray[0].name, shipArray[0].length, [random[0], random[1]]) 
+                    } else  if (shipArray[0].name == 'Carrier'){
+                        
+                        player.computer.placeShips(shipArray[0].name, shipArray[0].length, [random[0], random[1]], 'Horizontal') 
                     }
-
+                    // player.human.placeShips(shipArray[0].name, shipArray[0].length, [event.target.dataset.row, event.target.dataset.column], 'Horizontal')
                     if (random[1] > 6 && shipArray[0].name == 'Battle Ship') {
+                        random.length = 2
                         placeComputerShips()
+                        
                         console.log('INNER BATTLE TEST')
                         return player.computer.board
-                    }  else  {
-                        player.computer.placeHorizontal(shipArray[0].name, shipArray[0].length, [random[0], random[1]])
+                    }  else if (shipArray[0].name == 'Battle Ship')  {
+                        
+                        player.computer.placeShips(shipArray[0].name, shipArray[0].length, [random[0], random[1]], 'Horizontal') 
                     }   
                     
                     if (random[1] > 7 && shipArray[0].name == 'Destroyer') {
+                        random.length = 2
                         placeComputerShips()
+                        
                         console.log('INNER DESTROYER TEST')
                         return player.computer.board
-                    }  else {
-                        player.computer.placeHorizontal(shipArray[0].name, shipArray[0].length, [random[0], random[1]])
+                    }  else if (shipArray[0].name == 'Destroyer') {
+                        
+                        player.computer.placeShips(shipArray[0].name, shipArray[0].length, [random[0], random[1]], 'Horizontal') 
                     }   
                     
                     if (random[1] > 7 && shipArray[0].name == 'Submarine') {
+                        random.length = 2
                         placeComputerShips()
+                        
                         console.log('INNER SUB TEST')
                         return player.computer.board
-                    }  else {
-                        player.computer.placeHorizontal(shipArray[0].name, shipArray[0].length, [random[0], random[1]])
+                    }  else if (shipArray[0].name == 'Submarine') {
+                        
+                        player.computer.placeShips(shipArray[0].name, shipArray[0].length, [random[0], random[1]], 'Horizontal') 
                     }   
                     
                     if (random[1] > 8 && shipArray[0].name == 'Patrol Boat') {
+                        random.length = 2
                         placeComputerShips()
+                        
                         console.log('INNER PATROL TEST')
                         return player.computer.board
-                    } else {
-                        player.computer.placeHorizontal(shipArray[0].name, shipArray[0].length, [random[0], random[1]])
+                    } else  if (shipArray[0].name == 'Patrol Boat'){
+                        
+                        player.computer.placeShips(shipArray[0].name, shipArray[0].length, [random[0], random[1]], 'Horizontal') 
                     }   
-                }
+                // }
                 for (let row = 0; row < shipArray[0].length; row++) {
                     if (enemyWaters.children[i].dataset.row == random[0] && enemyWaters.children[i].dataset.column == random[1]
                     && random[2] ) {
                         switch (shipArray[0].name) {
                             case 'Carrier':
                                 for (let j = 9; j < 16; j++) {
-                                    if (enemyWaters.children[i + j] ) enemyWaters.children[i + j].style.background = 'purple'
+                                    if (enemyWaters.children[i + j] ) enemyWaters.children[i + j].dataset.outer = 'Outer'
                                     if (player.computer.board[k + j] && player.computer.board[k][0] == random[0] && player.computer.board[k][1] == random[1]) {
-                                        player.computer.board[k + j][2] = {outer: `Outer Carrier`}
+                                        player.computer.board[k + j][2] = {outer: `Outer`}
                                     }
                                 }
                                 for (let j = 11; j > 4; j--) {
-                                    if (enemyWaters.children[i - j]) enemyWaters.children[i - j].style.background = 'purple'
+                                    if (enemyWaters.children[i - j]) enemyWaters.children[i - j].dataset.outer = 'Outer'
                                     if (player.computer.board[k - j] && player.computer.board[k][0] == random[0] && player.computer.board[k][1] == random[1]) {
-                                        player.computer.board[k - j][2] = {outer: `Outer Carrier`}
+                                        player.computer.board[k - j][2] = {outer: `Outer`}
                                     }
                                 }
                                 break;
                             case 'Battle Ship': 
                                 for (let j = 9; j < 15; j++) {
-                                    if (enemyWaters.children[i + j]  ) enemyWaters.children[i + j].style.background = 'purple'
+                                    if (enemyWaters.children[i + j]  ) enemyWaters.children[i + j].dataset.outer = 'Outer'
                                     if (player.computer.board[k + j] && player.computer.board[k][0] == random[0] && player.computer.board[k][1] == random[1]) {
-                                        player.computer.board[k + j][2] = {outer: `Outer Battle Ship`}
+                                        player.computer.board[k + j][2] = {outer: `Outer`}
                                     }
                                 }
                                 for (let j = 11; j > 5; j--) {
-                                    if (enemyWaters.children[i - j] ) enemyWaters.children[i - j].style.background = 'purple'
+                                    if (enemyWaters.children[i - j] ) enemyWaters.children[i - j].dataset.outer = 'Outer'
                                     if (player.computer.board[k - j] && player.computer.board[k][0] == random[0] && player.computer.board[k][1] == random[1]) {
-                                        player.computer.board[k - j][2] = {outer: `Outer Battle Ship`}
+                                        player.computer.board[k - j][2] = {outer: `Outer`}
                                     }
                                 }
                                 break;
                             case 'Destroyer':
                                 for (let j = 9; j < 14; j++) {
-                                    if (enemyWaters.children[i + j]  ) enemyWaters.children[i + j].style.background = 'purple'
+                                    if (enemyWaters.children[i + j]  ) enemyWaters.children[i + j].dataset.outer = 'Outer'
                                     if (player.computer.board[k + j] && player.computer.board[k][0] == random[0] && player.computer.board[k][1] == random[1]) {
-                                        player.computer.board[k + j][2] = {outer: `Outer Destroyer`}
+                                        player.computer.board[k + j][2] = {outer: `Outer`}
                                     }
                                 }
                                 for (let j = 11; j > 6; j--) {
-                                    if (enemyWaters.children[i - j]) enemyWaters.children[i - j].style.background = 'purple'
+                                    if (enemyWaters.children[i - j]) enemyWaters.children[i - j].dataset.outer = 'Outer'
                                     if (player.computer.board[k - j] && player.computer.board[k][0] == random[0] && player.computer.board[k][1] == random[1]) {
-                                        player.computer.board[k - j][2] = {outer: `Outer Destroyer`}
+                                        player.computer.board[k - j][2] = {outer: `Outer`}
                                     }
                                 }
                                 break;
                             case 'Submarine':
                                 for (let j = 9; j < 14; j++) {
-                                    if (enemyWaters.children[i + j]  ) enemyWaters.children[i + j].style.background = 'purple'
+                                    if (enemyWaters.children[i + j]  ) enemyWaters.children[i + j].dataset.outer = 'Outer'
                                     if (player.computer.board[k + j] && player.computer.board[k][0] == random[0] && player.computer.board[k][1] == random[1]) {
-                                        player.computer.board[k + j][2] = {outer: `Outer Submarine`}
+                                        player.computer.board[k + j][2] = {outer: `Outer`}
                                     }
                                 }
                                 for (let j = 11; j > 6; j--) {
-                                    if (enemyWaters.children[i - j]) enemyWaters.children[i - j].style.background = 'purple'
+                                    if (enemyWaters.children[i - j]) enemyWaters.children[i - j].dataset.outer = 'Outer'
                                     if (player.computer.board[k - j] && player.computer.board[k][0] == random[0] && player.computer.board[k][1] == random[1]) {
-                                        player.computer.board[k - j][2] = {outer: `Outer Submarine`}
+                                        player.computer.board[k - j][2] = {outer: `Outer`}
                                     }
                                 }
                                 break;
                             case 'Patrol Boat':
                                 for (let j = 9; j < 13; j++) {
                                     
-                                    if (enemyWaters.children[i + j]  ) enemyWaters.children[i + j].style.background = 'purple'
+                                    if (enemyWaters.children[i + j]  ) enemyWaters.children[i + j].dataset.outer = 'Outer'
                                     if (player.computer.board[k + j] && player.computer.board[k][0] == random[0] && player.computer.board[k][1] == random[1]) {
-                                        player.computer.board[k + j][2] = {outer: `Outer Patrol Boat`}
+                                        player.computer.board[k + j][2] = {outer: `Outer`}
                                     }
                                 }
                                 for (let j = 11; j > 7; j--) {
                                     
-                                    if (enemyWaters.children[i - j]) enemyWaters.children[i - j].style.background = 'purple'
+                                    if (enemyWaters.children[i - j]) enemyWaters.children[i - j].dataset.outer = 'Outer'
                                     if (player.computer.board[k - j] && player.computer.board[k][0] == random[0] && player.computer.board[k][1] == random[1]) {
-                                        player.computer.board[k - j][2] = {outer: `Outer Patrol Boat`}
+                                        player.computer.board[k - j][2] = {outer: `Outer`}
                                     }
                                 }
                             break;
                         }
-                        if (enemyWaters.children[i - 1] && enemyWaters.children[i - 1].dataset.column != 9) enemyWaters.children[i - 1].style.background = 'yellow'
+                        if (enemyWaters.children[i - 1] && enemyWaters.children[i - 1].dataset.column != 9) enemyWaters.children[i - 1].dataset.outer = 'Outer'
                         if (player.computer.board[k - 1] && player.computer.board[k - 1][0] == random[0] && player.computer.board[k - 1][1] == random[1] - 1 && player.computer.board[k - 1][1] != 9) player.computer.board[k - 1][2] = {outer: 'OUTER'}
-                        if (enemyWaters.children[i + row + 1] && enemyWaters.children[i + row + 1].dataset.column != 0) enemyWaters.children[i + row + 1].style.background = 'yellow'
+                        if (enemyWaters.children[i + row + 1] && enemyWaters.children[i + row + 1].dataset.column != 0) enemyWaters.children[i + row + 1].dataset.outer = 'Outer'
                         if (player.computer.board[k + row + 1] && player.computer.board[k + row + 1][0] == random[0] && player.computer.board[k + row + 1][1] == random[1] + row + 1 && player.computer.board[k + row + 1][1] != 0) player.computer.board[k + row + 1][2] = {outer: 'OUTER'}
                         
-                        enemyWaters.children[i + row].style.background = 'red'
+                        // enemyWaters.children[i + row].style.background = 'red'
                         enemyWaters.children[i + row].dataset.ship = shipArray[0].name
                         enemyWaters.children[i + row].dataset.shot = false
                     }
@@ -260,7 +261,7 @@ const placeComputerShips = () => {
             }
         }
     } else {
-        console.log('G RAND', random)
+        // console.log('G RAND', random)
         if (random.length == 3) {
             placeComputerShips()
             return
@@ -292,29 +293,39 @@ const placeComputerShips = () => {
         for (let i = 0; i < enemyWaters.children.length; i++) {
             for (let row = 0; row < player.computer.board.length; row++) {
                 if (random[0] > 5 && shipArray[0].name == 'Carrier') {
+                    random.length = 2
                     placeComputerShips()
+                    
                     return player.computer.board
-                } else player.computer.placeVertical(shipArray[0].name, shipArray[0].length, [random[0], random[1]])          
+                } else player.computer.placeShips(shipArray[0].name, shipArray[0].length, [random[0], random[1]], 'Vertical')           
                 
                 if (random[0] > 6 && shipArray[0].name == 'Battle Ship') {
+                    random.length = 2
                     placeComputerShips()
+                    
                     return player.computer.board
-                } else player.computer.placeVertical(shipArray[0].name, shipArray[0].length, [random[0], random[1]])
+                } else player.computer.placeShips(shipArray[0].name, shipArray[0].length, [random[0], random[1]], 'Vertical') 
                 
                 if (random[0] > 7 && shipArray[0].name == 'Destroyer') {
+                    random.length = 2
                     placeComputerShips()
+                    
                     return player.computer.board
-                } else player.computer.placeVertical(shipArray[0].name, shipArray[0].length, [random[0], random[1]])
+                } else player.computer.placeShips(shipArray[0].name, shipArray[0].length, [random[0], random[1]], 'Vertical') 
                 
                 if (random[0] > 7 && shipArray[0].name == 'Submarine') {
+                    random.length = 2
                     placeComputerShips()
+                    
                     return player.computer.board
-                } else player.computer.placeVertical(shipArray[0].name, shipArray[0].length, [random[0], random[1]])
+                } else player.computer.placeShips(shipArray[0].name, shipArray[0].length, [random[0], random[1]], 'Vertical') 
                 
                 if (random[0] > 8 && shipArray[0].name == 'Patrol Boat') {
+                    random.length = 2
                     placeComputerShips()
+                    
                     return player.computer.board
-                } else player.computer.placeVertical(shipArray[0].name, shipArray[0].length, [random[0], random[1]])
+                } else player.computer.placeShips(shipArray[0].name, shipArray[0].length, [random[0], random[1]], 'Vertical') 
                 
                 for (let index = 0; index <= shipArray[0].length + 1; index++) {
                     if (player.computer.board[row + 1] && player.computer.board[row + index] && player.computer.board[row + index][0] == random[0] + index && player.computer.board[row][1] == random[1]) player.computer.board[row + 1][2] = {outer: 'OUTER'}
@@ -339,14 +350,15 @@ const placeComputerShips = () => {
                     //     placeComputerShips()
                     //     return player.computer.board
                     // }
-                    enemyWaters.children[i].style.background = 'red'
+                    
+                    // enemyWaters.children[i].style.background = 'red'
 
-                    if (enemyWaters.children[i + 1]) enemyWaters.children[i + 1].style.background = 'yellow'
-                    if (enemyWaters.children[i + 1]) enemyWaters.children[i + 1].style.background = 'purple'
-                    if (enemyWaters.children[i - 1]) enemyWaters.children[i - 1].style.background = 'purple'
-                    if (enemyWaters.children[i - 10]) enemyWaters.children[i - 10].style.background = 'yellow'
-                    if (enemyWaters.children[i - 11]) enemyWaters.children[i - 11].style.background = 'yellow'
-                    if (enemyWaters.children[i - 9]) enemyWaters.children[i - 9].style.background = 'yellow'
+                    if (enemyWaters.children[i + 1]) enemyWaters.children[i + 1].dataset.outer = 'Outer'
+                    if (enemyWaters.children[i + 1]) enemyWaters.children[i + 1].dataset.outer = 'Outer'
+                    if (enemyWaters.children[i - 1]) enemyWaters.children[i - 1].dataset.outer = 'Outer'
+                    if (enemyWaters.children[i - 10]) enemyWaters.children[i - 10].dataset.outer = 'Outer'
+                    if (enemyWaters.children[i - 11]) enemyWaters.children[i - 11].dataset.outer = 'Outer'
+                    if (enemyWaters.children[i - 9]) enemyWaters.children[i - 9].dataset.outer = 'Outer'
 
                     enemyWaters.children[i].dataset.shot = false;
                     enemyWaters.children[i].dataset.ship = shipArray[0].name
@@ -355,62 +367,62 @@ const placeComputerShips = () => {
                     if (enemyWaters.children[i].dataset.ship == 'Carrier') {
                         for (let col = 0; col < 4; col++) {
                             enemyWaters.children[i += 10].dataset.ship = shipArray[0].name
-                            enemyWaters.children[i].style.background = 'red'
+                            // enemyWaters.children[i].style.background = 'red'
                             enemyWaters.children[i].dataset.shot = false
 
-                            if (enemyWaters.children[i + 10] && enemyWaters.children[i + 10].dataset.column == random[1]) enemyWaters.children[i + 10].style.background = 'purple'
-                            if (enemyWaters.children[i + 1] ) enemyWaters.children[i + 1].style.background = 'purple'
-                            if (enemyWaters.children[i - 1]) enemyWaters.children[i - 1].style.background = 'purple'
-                            if (enemyWaters.children[i + 11]) enemyWaters.children[i + 11].style.background = 'purple'
-                            if (enemyWaters.children[i + 9]) enemyWaters.children[i + 9].style.background = 'purple'
+                            if (enemyWaters.children[i + 10] && enemyWaters.children[i + 10].dataset.column == random[1]) enemyWaters.children[i + 10].dataset.outer = 'Outer'
+                            if (enemyWaters.children[i + 1] ) enemyWaters.children[i + 1].dataset.outer = 'Outer'
+                            if (enemyWaters.children[i - 1]) enemyWaters.children[i - 1].dataset.outer = 'Outer'
+                            if (enemyWaters.children[i + 11]) enemyWaters.children[i + 11].dataset.outer = 'Outer'
+                            if (enemyWaters.children[i + 9]) enemyWaters.children[i + 9].dataset.outer = 'Outer'
                         }
                     } else if (enemyWaters.children[i].dataset.ship == 'Battle Ship') {
                         for (let col = 0; col < 3; col++) {
                             enemyWaters.children[i += 10].dataset.ship = shipArray[0].name
-                            enemyWaters.children[i].style.background = 'red'
+                            // enemyWaters.children[i].style.background = 'red'
                             enemyWaters.children[i].dataset.shot = false
                             
-                            if (enemyWaters.children[i + 10] && enemyWaters.children[i + 10].dataset.column == random[1]) enemyWaters.children[i + 10].style.background = 'purple'
-                            if (enemyWaters.children[i + 1] ) enemyWaters.children[i + 1].style.background = 'purple'
-                            if (enemyWaters.children[i - 1]) enemyWaters.children[i - 1].style.background = 'purple'
-                            if (enemyWaters.children[i + 11]) enemyWaters.children[i + 11].style.background = 'purple'
-                            if (enemyWaters.children[i + 9]) enemyWaters.children[i + 9].style.background = 'purple'
+                            if (enemyWaters.children[i + 10] && enemyWaters.children[i + 10].dataset.column == random[1]) enemyWaters.children[i + 10].dataset.outer = 'Outer'
+                            if (enemyWaters.children[i + 1] ) enemyWaters.children[i + 1].dataset.outer = 'Outer'
+                            if (enemyWaters.children[i - 1]) enemyWaters.children[i - 1].dataset.outer = 'Outer'
+                            if (enemyWaters.children[i + 11]) enemyWaters.children[i + 11].dataset.outer = 'Outer'
+                            if (enemyWaters.children[i + 9]) enemyWaters.children[i + 9].dataset.outer = 'Outer'
                         }
                     } else if (enemyWaters.children[i].dataset.ship == 'Destroyer') {
                         for (let col = 0; col < 2; col++) {
                             enemyWaters.children[i += 10].dataset.ship = shipArray[0].name
-                            enemyWaters.children[i].style.background = 'red'
+                            // enemyWaters.children[i].style.background = 'red'
                             enemyWaters.children[i].dataset.shot = false
                             
-                            if (enemyWaters.children[i + 10] && enemyWaters.children[i + 10].dataset.column == random[1]) enemyWaters.children[i + 10].style.background = 'purple'
-                            if (enemyWaters.children[i + 1] ) enemyWaters.children[i + 1].style.background = 'purple'
-                            if (enemyWaters.children[i - 1]) enemyWaters.children[i - 1].style.background = 'purple'
-                            if (enemyWaters.children[i + 11]) enemyWaters.children[i + 11].style.background = 'purple'
-                            if (enemyWaters.children[i + 9]) enemyWaters.children[i + 9].style.background = 'purple'
+                            if (enemyWaters.children[i + 10] && enemyWaters.children[i + 10].dataset.column == random[1]) enemyWaters.children[i + 10].dataset.outer = 'Outer'
+                            if (enemyWaters.children[i + 1] ) enemyWaters.children[i + 1].dataset.outer = 'Outer'
+                            if (enemyWaters.children[i - 1]) enemyWaters.children[i - 1].dataset.outer = 'Outer'
+                            if (enemyWaters.children[i + 11]) enemyWaters.children[i + 11].dataset.outer = 'Outer'
+                            if (enemyWaters.children[i + 9]) enemyWaters.children[i + 9].dataset.outer = 'Outer'
                         }
                     } else if (enemyWaters.children[i].dataset.ship == 'Submarine') {
                         for (let col = 0; col < 2; col++) {
                             enemyWaters.children[i += 10].dataset.ship = shipArray[0].name
-                            enemyWaters.children[i].style.background = 'red'
+                            // enemyWaters.children[i].style.background = 'red'
                             enemyWaters.children[i].dataset.shot = false
                             
-                            if (enemyWaters.children[i + 10] && enemyWaters.children[i + 10].dataset.column == random[1]) enemyWaters.children[i + 10].style.background = 'purple'
-                            if (enemyWaters.children[i + 1] ) enemyWaters.children[i + 1].style.background = 'purple'
-                            if (enemyWaters.children[i - 1]) enemyWaters.children[i - 1].style.background = 'purple'
-                            if (enemyWaters.children[i + 11]) enemyWaters.children[i + 11].style.background = 'purple'
-                            if (enemyWaters.children[i + 9]) enemyWaters.children[i + 9].style.background = 'purple'
+                            if (enemyWaters.children[i + 10] && enemyWaters.children[i + 10].dataset.column == random[1]) enemyWaters.children[i + 10].dataset.outer = 'Outer'
+                            if (enemyWaters.children[i + 1] ) enemyWaters.children[i + 1].dataset.outer = 'Outer'
+                            if (enemyWaters.children[i - 1]) enemyWaters.children[i - 1].dataset.outer = 'Outer'
+                            if (enemyWaters.children[i + 11]) enemyWaters.children[i + 11].dataset.outer = 'Outer'
+                            if (enemyWaters.children[i + 9]) enemyWaters.children[i + 9].dataset.outer = 'Outer'
                         }
                     } else if (enemyWaters.children[i].dataset.ship == 'Patrol Boat') {
                         for (let col = 0; col < 1; col++) {
                             enemyWaters.children[i += 10].dataset.ship = shipArray[0].name
-                            enemyWaters.children[i].style.background = 'red'
+                            // enemyWaters.children[i].style.background = 'red'
                             enemyWaters.children[i].dataset.shot = false
                             
-                            if (enemyWaters.children[i + 10] && enemyWaters.children[i + 10].dataset.column == random[1]) enemyWaters.children[i + 10].style.background = 'purple'
-                            if (enemyWaters.children[i + 1] ) enemyWaters.children[i + 1].style.background = 'purple'
-                            if (enemyWaters.children[i - 1]) enemyWaters.children[i - 1].style.background = 'purple'
-                            if (enemyWaters.children[i + 11]) enemyWaters.children[i + 11].style.background = 'purple'
-                            if (enemyWaters.children[i + 9]) enemyWaters.children[i + 9].style.background = 'purple'
+                            if (enemyWaters.children[i + 10] && enemyWaters.children[i + 10].dataset.column == random[1]) enemyWaters.children[i + 10].dataset.outer = 'Outer'
+                            if (enemyWaters.children[i + 1] ) enemyWaters.children[i + 1].dataset.outer = 'Outer'
+                            if (enemyWaters.children[i - 1]) enemyWaters.children[i - 1].dataset.outer = 'Outer'
+                            if (enemyWaters.children[i + 11]) enemyWaters.children[i + 11].dataset.outer = 'Outer'
+                            if (enemyWaters.children[i + 9]) enemyWaters.children[i + 9].dataset.outer = 'Outer'
                         }
                     }
                 }
@@ -419,51 +431,59 @@ const placeComputerShips = () => {
     }
     return player.computer.board
 }
-
+let firstChild = 2;
+let secondChild = 3;
 const clickShipPlacement = event => {
     let nextSibling = event.target.nextElementSibling
     let numberIndex = 1;
     // CHANGE PURPLE BACKGROUNDS INTO A DATASET OF SHIP
-    player.human.placeShips(shipArray[0].name, shipArray[0].length, [event.target.dataset.row, event.target.dataset.column], 'Horizontal')
-    
-    
-    if (event.target.style.background == 'purple' || event.target.style.background == 'red') return 
+
+    if (event.target.dataset.outer == 'Outer' || event.target.style.background == 'black') return 
+    if (shipBlocks.children[firstChild].dataset.column == shipBlocks.children[secondChild].dataset.column
+    || shipBlocks.children[firstChild].dataset.column > shipBlocks.children[secondChild].dataset.column) return
+    // if (shipBlocks.children[0].dataset.column > shipBlocks.children[1].dataset.column) return
     while (nextSibling && numberIndex !== shipArray[0].length) {
-        if (nextSibling.style.background == 'purple') return
+        if (nextSibling.dataset.outer == 'Outer') return
         
         numberIndex++
         nextSibling = nextSibling.nextElementSibling
     }
+
+    if (firstChild > 0) firstChild--
+    if (secondChild > 1) secondChild--
+
+    player.human.placeShips(shipArray[0].name, shipArray[0].length, [event.target.dataset.row, event.target.dataset.column], 'Horizontal')
+    placeComputerShips()
+
     for (let i = 0; i < allyWaters.children.length; i++) {
         for (let j = 0; j < shipBlocks.children.length; j++) {
             for (let k = 0; k < player.human.board.length; k++) {
                 if (allyWaters.children[i].dataset.row == shipBlocks.children[j].dataset.row 
                 && allyWaters.children[i].dataset.column == shipBlocks.children[j].dataset.column) {
-                    allyWaters.children[i].style.background = 'red'
+                    allyWaters.children[i].style.background = 'black'
                     allyWaters.children[i].dataset.ship = shipArray[0].name
                 }
             }
             for (let g = 0; g < shipZone.children.length; g++) {
                 if (shipBlocks.children[j].dataset.row == shipZone.children[g].dataset.row &&
                 shipBlocks.children[j].dataset.column == shipZone.children[g].dataset.column)  {
-                    event.target.style.background = 'red'
-                    shipZone.children[g].style.background = 'red'
+                    event.target.style.background = 'black'
+                    shipZone.children[g].style.background = 'black'
                     shipZone.children[g].dataset.ship = shipArray[0].name
-                    if (event.target.previousElementSibling  && event.target.previousElementSibling.dataset.row == event.target.dataset.row) event.target.previousElementSibling.style.background = 'purple'
-                    if (shipZone.children[g + 1] && shipZone.children[g + 1].dataset.row == event.target.dataset.row) shipZone.children[g + 1].style.background = 'purple'
-                    if (shipZone.children[g + 10]) shipZone.children[g + 10].style.background = 'purple'
-                    if (shipZone.children[g - 10]) shipZone.children[g - 10].style.background = 'purple'
-                    if (shipZone.children[g - 10] && shipZone.children[g - 10].previousElementSibling && shipZone.children[g - 10].previousElementSibling.dataset.row == event.target.dataset.row - 1) shipZone.children[g - 10].previousElementSibling.style.background = 'purple'
-                    if (shipZone.children[g - 10] && shipZone.children[g - 10].nextElementSibling.dataset.row == event.target.dataset.row - 1) shipZone.children[g - 10].nextElementSibling.style.background = 'purple'
-                    if (shipZone.children[g + 10] ) shipZone.children[g + 10].previousElementSibling.style.background = 'purple'
-                    if (shipZone.children[g + 10] && shipZone.children[g + 10].nextElementSibling) shipZone.children[g + 10].nextElementSibling.style.background = 'purple'
+                    // SWITCH PURPLE COLORS INTO DATASETS OF OUTERS
+                    if (event.target.previousElementSibling  && event.target.previousElementSibling.dataset.row == event.target.dataset.row) event.target.previousElementSibling.dataset.outer = 'Outer'
+                    if (shipZone.children[g + 1] && shipZone.children[g + 1].dataset.row == event.target.dataset.row) shipZone.children[g + 1].dataset.outer = 'Outer'
+                    if (shipZone.children[g + 10]) shipZone.children[g + 10].dataset.outer = 'Outer'
+                    if (shipZone.children[g - 10]) shipZone.children[g - 10].dataset.outer = 'Outer'
+                    if (shipZone.children[g - 10] && shipZone.children[g - 10].previousElementSibling && shipZone.children[g - 10].previousElementSibling.dataset.row == event.target.dataset.row - 1) shipZone.children[g - 10].previousElementSibling.dataset.outer = 'Outer'
+                    if (shipZone.children[g - 10] && shipZone.children[g - 10].nextElementSibling.dataset.row == event.target.dataset.row - 1) shipZone.children[g - 10].nextElementSibling.dataset.outer = 'Outer'
+                    if (shipZone.children[g + 10] && shipZone.children[g + 10].previousElementSibling && shipZone.children[g + 10].previousElementSibling.dataset.row == Number(event.target.dataset.row) + 1) shipZone.children[g + 10].previousElementSibling.dataset.outer = 'Outer'
+                    if (shipZone.children[g + 10] && shipZone.children[g + 10].nextElementSibling && shipZone.children[g + 10].nextElementSibling.dataset.row == Number(event.target.dataset.row) + 1) shipZone.children[g + 10].nextElementSibling.dataset.outer = 'Outer'
                 } 
             }
-            shipBlocks.children[j].style.background = 'red'
+            shipBlocks.children[j].style.background = 'black'
         }
     }
-    
-    placeComputerShips()
     
     if (shipArray[0].name == 'Carrier') {
         shipBlocks.removeChild(shipBlocks.lastElementChild);
@@ -478,11 +498,13 @@ const clickShipPlacement = event => {
         shipBlocks.style.gridTemplateColumns = `repeat(2, 1fr)`
         shipBlocks.style.width = (shipBlocks.offsetWidth - 40)+ 'px'
     } else if (shipArray[0].name == 'Patrol Boat') {
-        document.querySelector('.contain-ships').remove()
+        document.querySelector('.contain-ships').style.display = 'none'
         document.querySelector('.contain').style.filter = 'none'
         document.querySelector('header').style.filter = 'none'
+        document.querySelector('.overlay').querySelector('p').innerText = 'Carrier'
     }
     shipCopy.push(shipArray[0])
+    console.log('COPY', shipCopy, shipArray)
     shipArray.splice(0, 1)
     if (shipArray[0]) document.querySelector('p').innerText = shipArray[0].name
 }
@@ -512,12 +534,12 @@ const hoverGridCell = (event) => {
 
     // USE getShipPositions to find the receivedattacks coordinates
 
-    console.log('Find it - enemyWaters', logPositions ) // USE THIS AND GET POSITION FOR CLICKS
+    // console.log('Find it - enemyWaters', logPositions ) // USE THIS AND GET POSITION FOR CLICKS
 
-    console.log('Random allyWaters', getGridPosition(allyWaters, Math.floor(Math.random() * allyWaters.childElementCount)) )
+    // console.log('Random allyWaters', getGridPosition(allyWaters, Math.floor(Math.random() * allyWaters.childElementCount)) )
     
     
-    console.log('Find ally coords', allyWaters.children[Math.floor(Math.random() * allyWaters.childElementCount)] )
+    // console.log('Find ally coords', allyWaters.children[Math.floor(Math.random() * allyWaters.childElementCount)] )
     
     // ABOVE WORKS, NOW FIND A WAY TO MAKE IT NOT COORDINATE TWICE
 }
@@ -525,15 +547,17 @@ const hoverGridCell = (event) => {
 const clickGridCell = (event) => {
     const enemyBoardCoordinates = getGridPosition(enemyWaters, getElementIndex(event.target));
    
-    console.log('HUMAN VS COMPUTER ARRAY', player.attackPlayer('Human', [enemyBoardCoordinates.row, enemyBoardCoordinates.column]), player.computer.board)
+    player.attackPlayer('Human', [enemyBoardCoordinates.row, enemyBoardCoordinates.column])
     // player.attackPlayer('Computer', [allyBoardCoordinates.row, allyBoardCoordinates.column])
     randomSelectionCheck()
     // player.attackPlayer('Computer', [allyBoardCoordinates.row, allyBoardCoordinates.column])
     // console.log('LOOK COMPUTER ATTACK ALLY BOARD', player.human.board, player.human.shipAttacks, player.human.missedBlasts)
 
     
-    console.log('CHECK ARRAY', player.human.checkShipConditions(), player.computer.checkShipConditions())
+    console.log('CHECK ARRAY', player.human.board, player.computer.board)
     
+    console.log('SHIPPY', player.human.shipAttacks, player.computer.shipAttacks)
+
     if (event.target.dataset.ship) {
         event.target.style.pointerEvents = 'none'
         event.target.style.cursor = 'none'
@@ -545,23 +569,53 @@ const clickGridCell = (event) => {
         event.target.style.cursor = 'none'
     }
     if (player.human.checkShipConditions()) {
-        alert('COMPUTER WON')
-        clearBoard()
+        // alert('COMPUTER WON')
+        document.querySelector('.winner').innerText = 'COMPUTER WON'
+        document.querySelector('.restart').style.display = 'flex';
     } else if (player.computer.checkShipConditions()) {
-        alert('HUMAN WON')
-        
-        console.log('AFTER', player.computer.board, player.human.board)
+        // alert('HUMAN WON')
+        document.querySelector('.winner').innerText = 'HUMAN WON'
+        document.querySelector('.restart').style.display = 'flex';
+    }
+        // console.log('AFTER', player.computer.board, player.human.board)
         // console.log('WILLING', player.restartPlayers())
         
-    }
     
-    console.log('ENEMY', enemyBoardCoordinates) // USE TO ATTACK ENEMY
+    
+    // console.log('ENEMY', enemyBoardCoordinates) // USE TO ATTACK ENEMY
     // console.log('ALLY', allyBoardCoordinates) // USE FOR COMPUTER TO ATTACK
 }
 
 const restartBoard = event => {
     clearBoard();
+
     player.restartPlayers()
+    event.target.parentElement.style.display = '';
+    document.querySelector('.contain-ships').style.display = 'flex';
+    document.querySelector('.contain').style.filter ='blur(4px)';
+    shipArray = shipCopy.map(ship => ship);
+    shipBlocks.style.gridTemplateColumns = 'repeat(5, 1fr';
+    shipBlocks.style.width = '198px';
+    shipBlocks.children[1].style.borderRight = '1px solid silver';
+    shipCopy.splice(0, 5);
+    player.human.shipAttacks.length = 0;
+    player.human.missedBlasts.length = 0;
+    player.computer.shipAttacks.length = 0;
+    player.computer.missedBlasts.length = 0;
+   
+    firstChild = 2;
+    secondChild = 3
+
+    for (let i = 0; i < 3; i++) {
+        const createDiv = document.createElement('div');
+
+        shipBlocks.append(createDiv);
+        createDiv.classList.add('grid-styles')
+        createDiv.dataset.column
+        createDiv.dataset.row
+        createDiv.style.background = 'black'
+        if (i > 2) createDiv.style.borderRight = 'transparent'
+    }
 }
 
 const clearBoard = () => {
@@ -576,36 +630,44 @@ const clearBoard = () => {
     for (let i = 0; i < allyWaters.children.length; i++) {
         allyWaters.children[i].style.background = '';
         delete allyWaters.children[i].dataset.ship;
-        delete allyWaters.children[i].dataset.shot
+        allyWaters.children[i].dataset.shot = false
         if (allyWaters.children[i].firstChild) allyWaters.children[i].firstChild.remove()
     }
+    for (let i = 0; i < shipZone.children.length; i++) {
+        shipZone.children[i].style.background = ''
+        delete shipZone.children[i].dataset.ship
+        delete shipZone.children[i].dataset.outer
+    }
+    
+    array.length = 0;
 }
 
 const randomSelectionCheck = () => { // ALLY TARGETS
     const randomSelection = allyWaters.children[Math.floor(Math.random() * allyWaters.children.length)]
-    
-    // WHY DID IT WORK TO HERE BUT NOT WHEN PASSING IT INTO A FUNCTION 
-    console.log('RANDOM', randomSelection, randomSelection.dataset.shot)
-    // const allyBoardCoordinates = getGridPosition(allyWaters, getElementIndex(randomSelectionCheck()));
        
-    if (array.indexOf(randomSelection.dataset.row + randomSelection.dataset.column) == -1 && randomSelection) {
+    if (array.indexOf(randomSelection.dataset.row + randomSelection.dataset.column) == -1 ) {
         array.push(randomSelection.dataset.row + randomSelection.dataset.column)
-        randomSelection.innerHTML = `<i class="fas fa-circle"></i>`;
         randomSelection.dataset.shot = true;
 
         for (let i = 0; i < allyWaters.children.length; i++) {
             if (randomSelection.dataset.row == allyWaters.children[i].dataset.row && randomSelection.dataset.column == allyWaters.children[i].dataset.column
-            && allyWaters.children[i].dataset.ship) {
-                allyWaters.children[i].style.background = 'purple'
+            && randomSelection.dataset.ship) {
+                allyWaters.children[i].style.background = 'red'
                 player.attackPlayer('Computer', [randomSelection.dataset.row, randomSelection.dataset.column])
-            } else player.attackPlayer('Computer', [randomSelection.dataset.row, randomSelection.dataset.column])
+                return
+            } else if (randomSelection.dataset.row == allyWaters.children[i].dataset.row && randomSelection.dataset.column == allyWaters.children[i].dataset.column
+            && !allyWaters.children[i].dataset.ship) {
+                player.attackPlayer('Computer', [randomSelection.dataset.row, randomSelection.dataset.column])
+                randomSelection.innerHTML = `<i class="fas fa-circle"></i>`;
+                return
+            }
         }
 
-        return getGridPosition(allyWaters, getElementIndex(randomSelection))
-    } else {
+        return 
+    } else  {
         randomSelectionCheck()
 
-        return getGridPosition(allyWaters, getElementIndex(randomSelection))
+        return 
     }
 }
 
