@@ -6,8 +6,8 @@ const allyWaters = document.querySelector('.allied-waters');
 const shipZone = document.querySelector('.ship-zone');
 const shipBlocks = document.querySelector('.ship-block');
 const restartBtn = document.querySelector('.restart-btn');
+const rotateBtn = document.querySelector('.rotate-btn');
 const player = Player()
-const shipLengths = [5, 4, 3, 3, 2]
 const array = [];
 let shipArray = [
     {name: 'Carrier', length: 5},
@@ -33,7 +33,6 @@ const loadGridBlocks = () => {
         shipDivs.addEventListener('mouseover', hoverShipPlacements)
         shipDivs.addEventListener('mouseout', hoverOutShipPlacements)
         shipDivs.addEventListener('click', clickShipPlacement);
-        restartBtn.addEventListener('click', restartBoard)
         
         enemyWaters.append(enemyDivs)
         allyDivs.classList.add('grid-ally');
@@ -52,6 +51,76 @@ const loadGridBlocks = () => {
         shipDivs.dataset.column = Number(getGridPosition(shipZone, getElementIndex(shipDivs)).column);
         allyDivs.dataset.shot = false;
     }
+    restartBtn.addEventListener('click', restartBoard)
+    rotateBtn.addEventListener('click', rotateShip)
+}
+
+const rotateShip = event => {
+    if (event.target.id == 'Horizontal') {
+        event.target.id = 'Vertical'
+        shipBlocks.style.gridTemplateColumns = 'none'
+        shipBlocks.lastElementChild.style.borderBottom = 'transparent'
+
+        for (let i = 0; i < shipBlocks.children.length; i++) {
+            shipBlocks.children[i].classList.toggle('grid-styles')
+            shipBlocks.children[i].classList.toggle('grid-vertical')
+            if (shipArray[0].name == 'Carrier') {
+                shipBlocks.style.gridTemplateRows = `repeat(5, 1fr)`
+                shipBlocks.style.width = 39 + 'px'
+                shipBlocks.style.height = 184 + 'px'
+            } else if (shipArray[0].name == 'Battle Ship') {
+                shipBlocks.style.gridTemplateRows = `repeat(4, 1fr)`
+                shipBlocks.style.width = 39 + 'px'
+                shipBlocks.style.height = 147 + 'px'
+            } else if (shipArray[0].name == 'Submarine') {
+                shipBlocks.style.gridTemplateRows = `repeat(3, 1fr)`
+                shipBlocks.style.width = 39 + 'px'
+                shipBlocks.style.height = 110 + 'px'
+            } else if (shipArray[0].name == 'Destroyer') {
+                shipBlocks.style.gridTemplateRows = `repeat(3, 1fr)`
+                shipBlocks.style.width = 39 + 'px'
+                shipBlocks.style.height = 110 + 'px'
+            } else if (shipArray[0].name == 'Patrol Boat') {
+                shipBlocks.style.gridTemplateRows = `repeat(2, 1fr)`
+                shipBlocks.style.width = 39 + 'px'
+                shipBlocks.style.height = 74 + 'px'
+            }
+        }
+    }
+    else {
+        event.target.id = 'Horizontal'
+        shipBlocks.style.gridTemplateRows = 'none'
+        shipBlocks.lastElementChild.style.borderRight = 'transparent'
+
+        for (let i = 0; i < shipBlocks.children.length; i++) {
+            shipBlocks.children[i].classList.toggle('grid-vertical')
+            shipBlocks.children[i].classList.toggle('grid-styles')
+
+            if (shipArray[0].name == 'Carrier') {
+                shipBlocks.style.gridTemplateColumns = `repeat(5, 1fr)`
+                shipBlocks.style.height = 36 + 'px'
+                shipBlocks.style.width = 198 + 'px'
+            } else if (shipArray[0].name == 'Battle Ship') {
+                shipBlocks.style.height = 36 + 'px'
+                shipBlocks.style.width = 158 + 'px'
+                shipBlocks.style.gridTemplateColumns = `repeat(4, 1fr)`
+                // shipBlocks.style.height = (shipBlocks.offsetHeight - 37) + 'px'
+            } else if (shipArray[0].name == 'Destroyer') {
+                shipBlocks.style.gridTemplateColumns = `repeat(3, 1fr)`
+                shipBlocks.style.height = 36 + 'px'
+                shipBlocks.style.width = 119 + 'px'
+            } else if (shipArray[0].name == 'Submarine') {
+                shipBlocks.style.gridTemplateColumns = `repeat(3, 1fr)`
+                shipBlocks.style.height = 36 + 'px'
+                shipBlocks.style.width = 119 + 'px'
+                // shipBlocks.style.height = (shipBlocks.offsetHeight - 37) + 'px'
+            } else if (shipArray[0].name == 'Patrol Boat') {
+                shipBlocks.style.gridTemplateColumns = `repeat(2, 1fr)`
+                shipBlocks.style.height = 36 + 'px'
+                shipBlocks.style.width = 79 + 'px'
+            }
+        }
+    }
 }
 
 const hoverShipPlacements = event => {
@@ -61,33 +130,39 @@ const hoverShipPlacements = event => {
     shipBlocks.style.display = 'grid'
     shipBlocks.style.left = (event.target.offsetLeft) + 'px'
     shipBlocks.style.top = (event.target.offsetTop) + 'px'
-    shipBlocks.lastElementChild.style.borderRight = 'transparent'
     
-    for (let i = 0; i < shipBlocks.children.length; i++) {
-        for (let k = 0; k < shipZone.children.length; k++) {
-            while (upper != shipLengths[0] && nextInnerGridCell) { // CHANGE THIS TO A UNIVERSAL SHIP LENGTH
+    if (rotateBtn.id == 'Horizontal') {
+        for (let i = 0; i < shipBlocks.children.length; i++) {
+            while (upper != shipArray[0].length && nextInnerGridCell) { // CHANGE THIS TO A UNIVERSAL SHIP LENGTH
                 if (shipBlocks.children[upper] && event.target.dataset.row == nextInnerGridCell.dataset.row ) shipBlocks.children[upper].dataset.column = nextInnerGridCell.dataset.column - 1 
                 else if (shipBlocks.lastElementChild.previousElementSibling.dataset.column == 8) shipBlocks.lastElementChild.dataset.column = 9;
 
                 upper++
                 nextInnerGridCell = nextInnerGridCell.nextElementSibling
             }
+            if (!shipBlocks.children[i].dataset.row) shipBlocks.children[i].dataset.row = event.target.dataset.row
+            else shipBlocks.children[i].dataset.row = event.target.dataset.row
+            if (shipBlocks.children[0].dataset.column && event.target.dataset.row == shipBlocks.children[i].dataset.row) shipBlocks.children[0].dataset.column = event.target.dataset.column
         }
-        if (!shipBlocks.children[i].dataset.row) shipBlocks.children[i].dataset.row = event.target.dataset.row
-        else shipBlocks.children[i].dataset.row = event.target.dataset.row
-        if (shipBlocks.children[0].dataset.column && event.target.dataset.row == shipBlocks.children[i].dataset.row) shipBlocks.children[0].dataset.column = event.target.dataset.column
+    } else {
+        for (let i = 0; i < shipBlocks.children.length; i++) {
+            while (upper != shipArray[0].length ) {
+                // shipBlocks.children[upper].dataset.row = event.target.dataset.row
+                if (shipBlocks.children[upper] && event.target.dataset.column == shipBlocks.children[upper].dataset.column
+                ) shipBlocks.children[upper].dataset.row = Number(event.target.dataset.row ) + upper
+                else if (shipBlocks.lastElementChild.previousElementSibling.dataset.row == 8) shipBlocks.lastElementChild.dataset.row = 9
+
+                upper++
+            }
+            if (!shipBlocks.children[i].dataset.column) shipBlocks.children[i].dataset.column = event.target.dataset.column
+            else shipBlocks.children[i].dataset.column = event.target.dataset.column
+            if (shipBlocks.children[0].dataset.row && event.target.dataset.column == shipBlocks.children[i].dataset.column) shipBlocks.children[0].dataset.row = event.target.dataset.row
+        }
     }
 }
 
-const hoverOutShipPlacements = event => {
+const hoverOutShipPlacements = () => {
     shipBlocks.style.display = 'none'
-
-    for (let i = 0; i < shipBlocks.children.length; i++) {
-        if (event.target.dataset.column !== -1) {
-
-        }
-        else return
-    }
 }
 
 const placeComputerShips = () => {
@@ -433,26 +508,45 @@ const placeComputerShips = () => {
 }
 let firstChild = 2;
 let secondChild = 3;
+
 const clickShipPlacement = event => {
     let nextSibling = event.target.nextElementSibling
+    let upper = 0;
     let numberIndex = 1;
     // CHANGE PURPLE BACKGROUNDS INTO A DATASET OF SHIP
+    if (event.target.style.background == 'purple' || event.target.style.background == 'black') return 
 
-    if (event.target.dataset.outer == 'Outer' || event.target.style.background == 'black') return 
-    if (shipBlocks.children[firstChild].dataset.column == shipBlocks.children[secondChild].dataset.column
-    || shipBlocks.children[firstChild].dataset.column > shipBlocks.children[secondChild].dataset.column) return
-    // if (shipBlocks.children[0].dataset.column > shipBlocks.children[1].dataset.column) return
-    while (nextSibling && numberIndex !== shipArray[0].length) {
-        if (nextSibling.dataset.outer == 'Outer') return
-        
-        numberIndex++
-        nextSibling = nextSibling.nextElementSibling
+    if (rotateBtn.id == 'Horizontal') {
+        if (shipBlocks.children[firstChild].dataset.column == shipBlocks.children[secondChild].dataset.column
+        || shipBlocks.children[firstChild].dataset.column > shipBlocks.children[secondChild].dataset.column) return
+        // if (shipBlocks.children[0].dataset.column > shipBlocks.children[1].dataset.column) return
+        while (nextSibling && numberIndex !== shipArray[0].length) {
+            if (nextSibling.style.background == 'purple') return
+            
+            numberIndex++
+            nextSibling = nextSibling.nextElementSibling
+        }
+    } else {
+        if (shipBlocks.lastElementChild.dataset.row > 9) return
+
+        // while (upper != shipArray[0].length) {
+        //     if (shipBlocks.children[upper].style.background == 'purple') return
+
+        //     upper++
+        // }
+
+        for (let i = 0; i < shipZone.children.length; i++) {
+            if (shipBlocks.lastElementChild.dataset.row == shipZone.children[i].dataset.row 
+            && shipBlocks.lastElementChild.dataset.column == shipZone.children[i].dataset.column
+            && shipZone.children[i].style.background == 'purple') return
+        }
     }
-
+    
     if (firstChild > 0) firstChild--
     if (secondChild > 1) secondChild--
 
-    player.human.placeShips(shipArray[0].name, shipArray[0].length, [event.target.dataset.row, event.target.dataset.column], 'Horizontal')
+    if (rotateBtn.id == 'Horizontal') player.human.placeShips(shipArray[0].name, shipArray[0].length, [event.target.dataset.row, event.target.dataset.column], 'Horizontal')
+    else player.human.placeShips(shipArray[0].name, shipArray[0].length, [event.target.dataset.row, event.target.dataset.column], 'Vertical')
     placeComputerShips()
 
     for (let i = 0; i < allyWaters.children.length; i++) {
@@ -471,37 +565,78 @@ const clickShipPlacement = event => {
                     shipZone.children[g].style.background = 'black'
                     shipZone.children[g].dataset.ship = shipArray[0].name
                     // SWITCH PURPLE COLORS INTO DATASETS OF OUTERS
-                    if (event.target.previousElementSibling  && event.target.previousElementSibling.dataset.row == event.target.dataset.row) event.target.previousElementSibling.dataset.outer = 'Outer'
-                    if (shipZone.children[g + 1] && shipZone.children[g + 1].dataset.row == event.target.dataset.row) shipZone.children[g + 1].dataset.outer = 'Outer'
-                    if (shipZone.children[g + 10]) shipZone.children[g + 10].dataset.outer = 'Outer'
-                    if (shipZone.children[g - 10]) shipZone.children[g - 10].dataset.outer = 'Outer'
-                    if (shipZone.children[g - 10] && shipZone.children[g - 10].previousElementSibling && shipZone.children[g - 10].previousElementSibling.dataset.row == event.target.dataset.row - 1) shipZone.children[g - 10].previousElementSibling.dataset.outer = 'Outer'
-                    if (shipZone.children[g - 10] && shipZone.children[g - 10].nextElementSibling.dataset.row == event.target.dataset.row - 1) shipZone.children[g - 10].nextElementSibling.dataset.outer = 'Outer'
-                    if (shipZone.children[g + 10] && shipZone.children[g + 10].previousElementSibling && shipZone.children[g + 10].previousElementSibling.dataset.row == Number(event.target.dataset.row) + 1) shipZone.children[g + 10].previousElementSibling.dataset.outer = 'Outer'
-                    if (shipZone.children[g + 10] && shipZone.children[g + 10].nextElementSibling && shipZone.children[g + 10].nextElementSibling.dataset.row == Number(event.target.dataset.row) + 1) shipZone.children[g + 10].nextElementSibling.dataset.outer = 'Outer'
+                    if (rotateBtn.id == 'Horizontal') {
+                        if (event.target.previousElementSibling  && event.target.previousElementSibling.dataset.row == event.target.dataset.row) event.target.previousElementSibling.style.background = 'purple'
+                        if (shipZone.children[g + 1] && shipZone.children[g + 1].dataset.row == event.target.dataset.row) shipZone.children[g + 1].style.background = 'purple'
+                        if (shipZone.children[g + 10]) shipZone.children[g + 10].style.background = 'purple'
+                        if (shipZone.children[g - 10]) shipZone.children[g - 10].style.background = 'purple'
+                        if (shipZone.children[g - 10] && shipZone.children[g - 10].previousElementSibling && shipZone.children[g - 10].previousElementSibling.dataset.row == event.target.dataset.row - 1) shipZone.children[g - 10].previousElementSibling.style.background = 'purple'
+                        if (shipZone.children[g - 10] && shipZone.children[g - 10].nextElementSibling.dataset.row == event.target.dataset.row - 1) shipZone.children[g - 10].nextElementSibling.style.background = 'purple'
+                        if (shipZone.children[g + 10] && shipZone.children[g + 10].previousElementSibling && shipZone.children[g + 10].previousElementSibling.dataset.row == Number(event.target.dataset.row) + 1) shipZone.children[g + 10].previousElementSibling.style.background = 'purple'
+                        if (shipZone.children[g + 10] && shipZone.children[g + 10].nextElementSibling && shipZone.children[g + 10].nextElementSibling.dataset.row == Number(event.target.dataset.row) + 1) shipZone.children[g + 10].nextElementSibling.style.background = 'purple'
+                    
+                    } else {
+                        if (shipZone.children[g + 10] ) shipZone.children[g + 10].style.background = 'purple'
+                        // if (shipZone.children[g + 1] && shipZone.children[g + 1].dataset.column ) shipZone.children[g + 1].style.background = 'purple'
+                        // // if (shipZone.children[g - 1] && shipZone.children[g + 1].dataset.column ) shipZone.children[g - 1].style.background = 'purple'
+                        if (shipZone.children[g + 11] && shipZone.children[g + 11].dataset.column != 0) shipZone.children[g + 11].style.background = 'purple'
+                        if (shipZone.children[g + 9] && shipZone.children[g + 9].dataset.column != 9) shipZone.children[g + 9].style.background = 'purple'
+                        // MAKE THE OUTERS APPEAR ON THE SAME LINE
+                        // if (shipZone.children[g - 10]) shipZone.children[g - 10].dataset.outer = 'Outer'
+                        if (shipZone.children[g - 10] && shipZone.children[g - 10].dataset.row == event.target.dataset.row - 1) shipZone.children[g - 10].style.background = 'purple'
+                        if (shipZone.children[g - 11] && shipZone.children[g - 11].dataset.column != 9) shipZone.children[g - 11].style.background = 'purple'
+                        if (shipZone.children[g - 9] && shipZone.children[g - 9].dataset.column != 0) shipZone.children[g - 9].style.background = 'purple'
+                        // console.log('PREV', shipZone.children[g - 9].dataset.column, shipZone.children[g + 9].dataset.column, event.target.dataset.column )
+                        
+                    }
+                    
                 } 
             }
             shipBlocks.children[j].style.background = 'black'
+            
         }
     }
     
-    if (shipArray[0].name == 'Carrier') {
-        shipBlocks.removeChild(shipBlocks.lastElementChild);
-        shipBlocks.style.gridTemplateColumns = `repeat(4, 1fr)`
-        shipBlocks.style.width = (shipBlocks.offsetWidth - 40)+ 'px'
-    } else if (shipArray[0].name == 'Battle Ship') {
-        shipBlocks.removeChild(shipBlocks.lastElementChild);
-        shipBlocks.style.gridTemplateColumns = `repeat(3, 1fr)`
-        shipBlocks.style.width = (shipBlocks.offsetWidth - 40)+ 'px'
-    } else if (shipArray[0].name == 'Submarine') {
-        shipBlocks.removeChild(shipBlocks.lastElementChild);
-        shipBlocks.style.gridTemplateColumns = `repeat(2, 1fr)`
-        shipBlocks.style.width = (shipBlocks.offsetWidth - 40)+ 'px'
-    } else if (shipArray[0].name == 'Patrol Boat') {
-        document.querySelector('.contain-ships').style.display = 'none'
-        document.querySelector('.contain').style.filter = 'none'
-        document.querySelector('header').style.filter = 'none'
-        document.querySelector('.overlay').querySelector('p').innerText = 'Carrier'
+    if (rotateBtn.id == 'Horizontal') {
+        
+        if (shipArray[0].name == 'Carrier') {
+            shipBlocks.removeChild(shipBlocks.lastElementChild);
+            shipBlocks.style.gridTemplateColumns = `repeat(4, 1fr)`
+            shipBlocks.style.width = (shipBlocks.offsetWidth - 40) + 'px'
+        } else if (shipArray[0].name == 'Battle Ship') {
+            shipBlocks.removeChild(shipBlocks.lastElementChild);
+            shipBlocks.style.gridTemplateColumns = `repeat(3, 1fr)`
+            shipBlocks.style.width = (shipBlocks.offsetWidth - 40) + 'px'
+        } else if (shipArray[0].name == 'Submarine') {
+            shipBlocks.removeChild(shipBlocks.lastElementChild);
+            shipBlocks.style.gridTemplateColumns = `repeat(2, 1fr)`
+            shipBlocks.style.width = (shipBlocks.offsetWidth - 40) + 'px'
+        } else if (shipArray[0].name == 'Patrol Boat') {
+            document.querySelector('.contain-ships').style.display = 'none'
+            document.querySelector('.contain').style.filter = 'none'
+            document.querySelector('header').style.filter = 'none'
+            document.querySelector('.overlay').querySelector('p').innerText = 'Carrier'
+        }
+    } else {
+        if (shipArray[0].name == 'Carrier') {
+            shipBlocks.removeChild(shipBlocks.lastElementChild);
+            shipBlocks.style.gridTemplateRows = `repeat(4, 1fr)`
+            shipBlocks.style.height = (shipBlocks.offsetHeight - 37) + 'px'
+
+        } else if (shipArray[0].name == 'Battle Ship') {
+            shipBlocks.removeChild(shipBlocks.lastElementChild);
+            shipBlocks.style.gridTemplateRows = `repeat(3, 1fr)`
+            shipBlocks.style.height = (shipBlocks.offsetHeight - 37) + 'px'
+        } else if (shipArray[0].name == 'Submarine') {
+            shipBlocks.removeChild(shipBlocks.lastElementChild);
+            shipBlocks.style.gridTemplateRows = `repeat(2, 1fr)`
+            shipBlocks.style.height = (shipBlocks.offsetHeight - 37) + 'px'
+        } else if (shipArray[0].name == 'Patrol Boat') {
+            document.querySelector('.contain-ships').style.display = 'none'
+            document.querySelector('.contain').style.filter = 'none'
+            document.querySelector('header').style.filter = 'none'
+            document.querySelector('.overlay').querySelector('p').innerText = 'Carrier'
+        }
     }
     shipCopy.push(shipArray[0])
     console.log('COPY', shipCopy, shipArray)
