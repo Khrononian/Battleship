@@ -146,17 +146,21 @@ const hoverShipPlacements = event => {
         }
     } else {
         for (let i = 0; i < shipBlocks.children.length; i++) {
+            
             while (upper != shipArray[0].length ) {
                 // shipBlocks.children[upper].dataset.row = event.target.dataset.row
+                if (!shipBlocks.children[upper].dataset.row) shipBlocks.children[upper].dataset.row = Number(event.target.dataset.row) + upper
+                else shipBlocks.children[upper].dataset.row = Number(event.target.dataset.row) + upper
                 if (shipBlocks.children[upper] && event.target.dataset.column == shipBlocks.children[upper].dataset.column
                 ) shipBlocks.children[upper].dataset.row = Number(event.target.dataset.row ) + upper
-                else if (shipBlocks.lastElementChild.previousElementSibling.dataset.row == 8) shipBlocks.lastElementChild.dataset.row = 9
+                // else if (shipBlocks.lastElementChild.previousElementSibling.dataset.row == 8) shipBlocks.lastElementChild.dataset.row = 9
 
                 upper++
             }
             if (!shipBlocks.children[i].dataset.column) shipBlocks.children[i].dataset.column = event.target.dataset.column
             else shipBlocks.children[i].dataset.column = event.target.dataset.column
             if (shipBlocks.children[0].dataset.row && event.target.dataset.column == shipBlocks.children[i].dataset.column) shipBlocks.children[0].dataset.row = event.target.dataset.row
+            // if (shipBlocks.children[i].dataset.row && event.target.dataset.column == shipBlocks.children[i].dataset.column) shipBlocks.children[i].dataset.row = event.target.dataset.row
         }
     }
 }
@@ -549,6 +553,8 @@ const clickShipPlacement = event => {
     else player.human.placeShips(shipArray[0].name, shipArray[0].length, [event.target.dataset.row, event.target.dataset.column], 'Vertical')
     placeComputerShips()
 
+    console.log('COMPUTER', player.computer.board)
+    
     for (let i = 0; i < allyWaters.children.length; i++) {
         for (let j = 0; j < shipBlocks.children.length; j++) {
             for (let k = 0; k < player.human.board.length; k++) {
@@ -706,11 +712,11 @@ const clickGridCell = (event) => {
     if (player.human.checkShipConditions()) {
         // alert('COMPUTER WON')
         document.querySelector('.winner').innerText = 'COMPUTER WON'
-        document.querySelector('.restart').style.display = 'flex';
+        document.querySelector('.restart-overlay').style.display = 'flex';
     } else if (player.computer.checkShipConditions()) {
         // alert('HUMAN WON')
         document.querySelector('.winner').innerText = 'HUMAN WON'
-        document.querySelector('.restart').style.display = 'flex';
+        document.querySelector('.restart-overlay').style.display = 'flex';
     }
         // console.log('AFTER', player.computer.board, player.human.board)
         // console.log('WILLING', player.restartPlayers())
@@ -725,13 +731,26 @@ const restartBoard = event => {
     clearBoard();
 
     player.restartPlayers()
-    event.target.parentElement.style.display = '';
+    event.target.parentElement.parentElement.style.display = 'none';
     document.querySelector('.contain-ships').style.display = 'flex';
     document.querySelector('.contain').style.filter ='blur(4px)';
+    document.querySelector('header').style.filter = 'blur(4px)';
     shipArray = shipCopy.map(ship => ship);
-    shipBlocks.style.gridTemplateColumns = 'repeat(5, 1fr';
+    shipBlocks.style.gridTemplateColumns = 'repeat(5, 1fr)';
     shipBlocks.style.width = '198px';
-    shipBlocks.children[1].style.borderRight = '1px solid silver';
+    shipBlocks.style.height = '36px';
+    shipBlocks.style.gridTemplateRows = 'none';
+    rotateBtn.id = 'Horizontal'
+    // shipBlocks.children[1].style.borderRight = '1px solid silver';
+    if (shipBlocks.children[0].classList.contains('grid-vertical') && shipBlocks.children[1].classList.contains('grid-vertical')) {
+        
+        
+        shipBlocks.children[0].classList.toggle('grid-vertical')
+        shipBlocks.children[0].classList.toggle('grid-styles')
+        shipBlocks.children[1].classList.toggle('grid-vertical')
+        shipBlocks.children[1].classList.toggle('grid-styles')
+    }
+
     shipCopy.splice(0, 5);
     player.human.shipAttacks.length = 0;
     player.human.missedBlasts.length = 0;
