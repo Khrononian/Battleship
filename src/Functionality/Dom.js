@@ -17,6 +17,8 @@ let shipArray = [
     {name: 'Patrol Boat', length: 2}
 ]
 let shipCopy = []
+let firstChild = 2;
+let secondChild = 3;
 
 const loadGridBlocks = () => {
     for (let i = 0; i < 100; i++) {
@@ -40,7 +42,7 @@ const loadGridBlocks = () => {
         enemyDivs.style.cursor = 'pointer'
         shipZone.append(shipDivs)
         shipDivs.classList.add('grid-ships')
-        shipBlocks.style.visibility = 'unset'
+        // shipBlocks.style.visibility = 'unset'
         shipZone.append(shipBlocks)
 
         enemyDivs.dataset.row = Number(getGridPosition(enemyWaters, getElementIndex(enemyDivs)).row);
@@ -66,24 +68,24 @@ const rotateShip = event => {
             shipBlocks.children[i].classList.toggle('grid-vertical')
             if (shipArray[0].name == 'Carrier') {
                 shipBlocks.style.gridTemplateRows = `repeat(5, 1fr)`
-                shipBlocks.style.width = 39 + 'px'
-                shipBlocks.style.height = 184 + 'px'
+                shipBlocks.style.setProperty('width', 'calc(100% - 90%') + 'px'
+                shipBlocks.style.setProperty('height', 'calc(100% - 50%)') + 'px'
             } else if (shipArray[0].name == 'Battle Ship') {
                 shipBlocks.style.gridTemplateRows = `repeat(4, 1fr)`
-                shipBlocks.style.width = 39 + 'px'
-                shipBlocks.style.height = 147 + 'px'
+                shipBlocks.style.setProperty('width', 'calc(100% - 90%') + 'px'
+                shipBlocks.style.setProperty('height', 'calc(100% - 60%)') + 'px'
             } else if (shipArray[0].name == 'Submarine') {
                 shipBlocks.style.gridTemplateRows = `repeat(3, 1fr)`
-                shipBlocks.style.width = 39 + 'px'
-                shipBlocks.style.height = 110 + 'px'
+                shipBlocks.style.setProperty('width', 'calc(100% - 90%') + 'px'
+                shipBlocks.style.setProperty('height', 'calc(100% - 70%)') + 'px'
             } else if (shipArray[0].name == 'Destroyer') {
                 shipBlocks.style.gridTemplateRows = `repeat(3, 1fr)`
-                shipBlocks.style.width = 39 + 'px'
-                shipBlocks.style.height = 110 + 'px'
+                shipBlocks.style.setProperty('width', 'calc(100% - 90%') + 'px'
+                shipBlocks.style.setProperty('height', 'calc(100% - 70%)') + 'px'
             } else if (shipArray[0].name == 'Patrol Boat') {
                 shipBlocks.style.gridTemplateRows = `repeat(2, 1fr)`
-                shipBlocks.style.width = 39 + 'px'
-                shipBlocks.style.height = 74 + 'px'
+                shipBlocks.style.setProperty('width', 'calc(100% - 90%') + 'px'
+                shipBlocks.style.setProperty('height', 'calc(100% - 80%)')+ 'px'
             }
         }
     }
@@ -98,26 +100,26 @@ const rotateShip = event => {
 
             if (shipArray[0].name == 'Carrier') {
                 shipBlocks.style.gridTemplateColumns = `repeat(5, 1fr)`
-                shipBlocks.style.height = 36 + 'px'
-                shipBlocks.style.width = 198 + 'px'
+                shipBlocks.style.setProperty('height', 'calc(100% - 90%') + 'px'
+                shipBlocks.style.setProperty('width', 'calc(100% - 50%') + 'px'
             } else if (shipArray[0].name == 'Battle Ship') {
-                shipBlocks.style.height = 36 + 'px'
-                shipBlocks.style.width = 158 + 'px'
+                shipBlocks.style.setProperty('height', 'calc(100% - 90%') + 'px'
+                shipBlocks.style.setProperty('width', 'calc(100% - 60%') + 'px'
                 shipBlocks.style.gridTemplateColumns = `repeat(4, 1fr)`
                 // shipBlocks.style.height = (shipBlocks.offsetHeight - 37) + 'px'
             } else if (shipArray[0].name == 'Destroyer') {
                 shipBlocks.style.gridTemplateColumns = `repeat(3, 1fr)`
-                shipBlocks.style.height = 36 + 'px'
-                shipBlocks.style.width = 119 + 'px'
+                shipBlocks.style.setProperty('height', 'calc(100% - 90%') + 'px'
+                shipBlocks.style.setProperty('width', 'calc(100% - 70%') + 'px'
             } else if (shipArray[0].name == 'Submarine') {
                 shipBlocks.style.gridTemplateColumns = `repeat(3, 1fr)`
-                shipBlocks.style.height = 36 + 'px'
-                shipBlocks.style.width = 119 + 'px'
+                shipBlocks.style.setProperty('height', 'calc(100% - 90%') + 'px'
+                shipBlocks.style.setProperty('width', 'calc(100% - 70%') + 'px'
                 // shipBlocks.style.height = (shipBlocks.offsetHeight - 37) + 'px'
             } else if (shipArray[0].name == 'Patrol Boat') {
                 shipBlocks.style.gridTemplateColumns = `repeat(2, 1fr)`
-                shipBlocks.style.height = 36 + 'px'
-                shipBlocks.style.width = 79 + 'px'
+                shipBlocks.style.setProperty('height', 'calc(100% - 90%') + 'px'
+                shipBlocks.style.setProperty('width', 'calc(100% - 80%')+ 'px'
             }
         }
     }
@@ -130,6 +132,7 @@ const hoverShipPlacements = event => {
     shipBlocks.style.display = 'grid'
     shipBlocks.style.left = (event.target.offsetLeft) + 'px'
     shipBlocks.style.top = (event.target.offsetTop) + 'px'
+    shipBlocks.style.visibility = 'unset'
     
     if (rotateBtn.id == 'Horizontal') {
         for (let i = 0; i < shipBlocks.children.length; i++) {
@@ -510,20 +513,17 @@ const placeComputerShips = () => {
     }
     return player.computer.board
 }
-let firstChild = 2;
-let secondChild = 3;
+
 
 const clickShipPlacement = event => {
     let nextSibling = event.target.nextElementSibling
-    let upper = 0;
     let numberIndex = 1;
     // CHANGE PURPLE BACKGROUNDS INTO A DATASET OF SHIP
     if (event.target.style.background == 'purple' || event.target.style.background == 'black') return 
-
+    
     if (rotateBtn.id == 'Horizontal') {
-        if (shipBlocks.children[firstChild].dataset.column == shipBlocks.children[secondChild].dataset.column
-        || shipBlocks.children[firstChild].dataset.column > shipBlocks.children[secondChild].dataset.column) return
-        // if (shipBlocks.children[0].dataset.column > shipBlocks.children[1].dataset.column) return
+        if (event.target.dataset.column > 9 - shipArray[0].length + 1) return
+
         while (nextSibling && numberIndex !== shipArray[0].length) {
             if (nextSibling.style.background == 'purple') return
             
@@ -533,12 +533,6 @@ const clickShipPlacement = event => {
     } else {
         if (shipBlocks.lastElementChild.dataset.row > 9) return
 
-        // while (upper != shipArray[0].length) {
-        //     if (shipBlocks.children[upper].style.background == 'purple') return
-
-        //     upper++
-        // }
-
         for (let i = 0; i < shipZone.children.length; i++) {
             if (shipBlocks.lastElementChild.dataset.row == shipZone.children[i].dataset.row 
             && shipBlocks.lastElementChild.dataset.column == shipZone.children[i].dataset.column
@@ -546,9 +540,6 @@ const clickShipPlacement = event => {
         }
     }
     
-    if (firstChild > 0) firstChild--
-    if (secondChild > 1) secondChild--
-
     if (rotateBtn.id == 'Horizontal') player.human.placeShips(shipArray[0].name, shipArray[0].length, [event.target.dataset.row, event.target.dataset.column], 'Horizontal')
     else player.human.placeShips(shipArray[0].name, shipArray[0].length, [event.target.dataset.row, event.target.dataset.column], 'Vertical')
     placeComputerShips()
@@ -583,40 +574,34 @@ const clickShipPlacement = event => {
                     
                     } else {
                         if (shipZone.children[g + 10] ) shipZone.children[g + 10].style.background = 'purple'
-                        // if (shipZone.children[g + 1] && shipZone.children[g + 1].dataset.column ) shipZone.children[g + 1].style.background = 'purple'
-                        // // if (shipZone.children[g - 1] && shipZone.children[g + 1].dataset.column ) shipZone.children[g - 1].style.background = 'purple'
+
                         if (shipZone.children[g + 11] && shipZone.children[g + 11].dataset.column != 0) shipZone.children[g + 11].style.background = 'purple'
                         if (shipZone.children[g + 9] && shipZone.children[g + 9].dataset.column != 9) shipZone.children[g + 9].style.background = 'purple'
-                        // MAKE THE OUTERS APPEAR ON THE SAME LINE
-                        // if (shipZone.children[g - 10]) shipZone.children[g - 10].dataset.outer = 'Outer'
+
                         if (shipZone.children[g - 10] && shipZone.children[g - 10].dataset.row == event.target.dataset.row - 1) shipZone.children[g - 10].style.background = 'purple'
                         if (shipZone.children[g - 11] && shipZone.children[g - 11].dataset.column != 9) shipZone.children[g - 11].style.background = 'purple'
                         if (shipZone.children[g - 9] && shipZone.children[g - 9].dataset.column != 0) shipZone.children[g - 9].style.background = 'purple'
-                        // console.log('PREV', shipZone.children[g - 9].dataset.column, shipZone.children[g + 9].dataset.column, event.target.dataset.column )
                         
                     }
-                    
                 } 
             }
             shipBlocks.children[j].style.background = 'black'
-            
         }
     }
     
     if (rotateBtn.id == 'Horizontal') {
-        
         if (shipArray[0].name == 'Carrier') {
             shipBlocks.removeChild(shipBlocks.lastElementChild);
             shipBlocks.style.gridTemplateColumns = `repeat(4, 1fr)`
-            shipBlocks.style.width = (shipBlocks.offsetWidth - 40) + 'px'
+            shipBlocks.style.setProperty('width', 'calc(100% - 60%)')  + 'px'
         } else if (shipArray[0].name == 'Battle Ship') {
             shipBlocks.removeChild(shipBlocks.lastElementChild);
             shipBlocks.style.gridTemplateColumns = `repeat(3, 1fr)`
-            shipBlocks.style.width = (shipBlocks.offsetWidth - 40) + 'px'
+            shipBlocks.style.setProperty('width', 'calc(100% - 70%)')  + 'px'
         } else if (shipArray[0].name == 'Submarine') {
             shipBlocks.removeChild(shipBlocks.lastElementChild);
             shipBlocks.style.gridTemplateColumns = `repeat(2, 1fr)`
-            shipBlocks.style.width = (shipBlocks.offsetWidth - 40) + 'px'
+            shipBlocks.style.setProperty('width', 'calc(100% - 80%)')  + 'px'
         } else if (shipArray[0].name == 'Patrol Boat') {
             document.querySelector('.contain-ships').style.display = 'none'
             document.querySelector('.contain').style.filter = 'none'
@@ -627,16 +612,15 @@ const clickShipPlacement = event => {
         if (shipArray[0].name == 'Carrier') {
             shipBlocks.removeChild(shipBlocks.lastElementChild);
             shipBlocks.style.gridTemplateRows = `repeat(4, 1fr)`
-            shipBlocks.style.height = (shipBlocks.offsetHeight - 37) + 'px'
-
+            shipBlocks.style.setProperty('height', 'calc(100% - 60%') + 'px'
         } else if (shipArray[0].name == 'Battle Ship') {
             shipBlocks.removeChild(shipBlocks.lastElementChild);
             shipBlocks.style.gridTemplateRows = `repeat(3, 1fr)`
-            shipBlocks.style.height = (shipBlocks.offsetHeight - 37) + 'px'
+            shipBlocks.style.setProperty('height', 'calc(100% - 70%') + 'px'
         } else if (shipArray[0].name == 'Submarine') {
             shipBlocks.removeChild(shipBlocks.lastElementChild);
             shipBlocks.style.gridTemplateRows = `repeat(2, 1fr)`
-            shipBlocks.style.height = (shipBlocks.offsetHeight - 37) + 'px'
+            shipBlocks.style.setProperty('height', 'calc(100% - 80%') + 'px'
         } else if (shipArray[0].name == 'Patrol Boat') {
             document.querySelector('.contain-ships').style.display = 'none'
             document.querySelector('.contain').style.filter = 'none'
@@ -670,19 +654,6 @@ const getElementIndex = (element) => {
 
 const hoverGridCell = (event) => {
     event.target.style.background = '#3232';
-
-    const logPositions = getGridPosition(enemyWaters, getElementIndex(event.target))
-
-    // USE getShipPositions to find the receivedattacks coordinates
-
-    // console.log('Find it - enemyWaters', logPositions ) // USE THIS AND GET POSITION FOR CLICKS
-
-    // console.log('Random allyWaters', getGridPosition(allyWaters, Math.floor(Math.random() * allyWaters.childElementCount)) )
-    
-    
-    // console.log('Find ally coords', allyWaters.children[Math.floor(Math.random() * allyWaters.childElementCount)] )
-    
-    // ABOVE WORKS, NOW FIND A WAY TO MAKE IT NOT COORDINATE TWICE
 }
 
 const clickGridCell = (event) => {
@@ -694,7 +665,6 @@ const clickGridCell = (event) => {
     // player.attackPlayer('Computer', [allyBoardCoordinates.row, allyBoardCoordinates.column])
     // console.log('LOOK COMPUTER ATTACK ALLY BOARD', player.human.board, player.human.shipAttacks, player.human.missedBlasts)
 
-    
     console.log('CHECK ARRAY', player.human.board, player.computer.board)
     
     console.log('SHIPPY', player.human.shipAttacks, player.computer.shipAttacks)
@@ -720,9 +690,6 @@ const clickGridCell = (event) => {
     }
         // console.log('AFTER', player.computer.board, player.human.board)
         // console.log('WILLING', player.restartPlayers())
-        
-    
-    
     // console.log('ENEMY', enemyBoardCoordinates) // USE TO ATTACK ENEMY
     // console.log('ALLY', allyBoardCoordinates) // USE FOR COMPUTER TO ATTACK
 }
@@ -743,8 +710,6 @@ const restartBoard = event => {
     rotateBtn.id = 'Horizontal'
     // shipBlocks.children[1].style.borderRight = '1px solid silver';
     if (shipBlocks.children[0].classList.contains('grid-vertical') && shipBlocks.children[1].classList.contains('grid-vertical')) {
-        
-        
         shipBlocks.children[0].classList.toggle('grid-vertical')
         shipBlocks.children[0].classList.toggle('grid-styles')
         shipBlocks.children[1].classList.toggle('grid-vertical')
@@ -777,15 +742,16 @@ const clearBoard = () => {
         enemyWaters.children[i].style.background = ''
         delete enemyWaters.children[i].dataset.ship
         delete enemyWaters.children[i].dataset.shot
+        delete enemyWaters.children[i].dataset.outer
         enemyWaters.children[i].style.pointerEvents = 'auto'
         enemyWaters.children[i].style.cursor = 'pointer'
-        if (enemyWaters.children[i].firstChild) enemyWaters.children[i].firstChild.remove()
+        // if (enemyWaters.children[i].firstChild) enemyWaters.children[i].firstChild.remove()
     }
     for (let i = 0; i < allyWaters.children.length; i++) {
         allyWaters.children[i].style.background = '';
         delete allyWaters.children[i].dataset.ship;
         allyWaters.children[i].dataset.shot = false
-        if (allyWaters.children[i].firstChild) allyWaters.children[i].firstChild.remove()
+        // if (allyWaters.children[i].firstChild) allyWaters.children[i].firstChild.remove()
     }
     for (let i = 0; i < shipZone.children.length; i++) {
         shipZone.children[i].style.background = ''

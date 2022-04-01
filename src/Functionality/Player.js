@@ -13,21 +13,16 @@ const Player = () => {
         let clearPlayerBoard = human.board;
         let clearComputerBoard = computer.board;
 
-        
         // clearPlayerBoard = GameBoard().board
         for (let i = 0; i < clearPlayerBoard.length; i++) {
             if (clearPlayerBoard[i].length == 3) clearPlayerBoard[i].splice(2, 1)
         }
         
-        
-    
-    
         // clearComputerBoard = GameBoard().board
         for (let i = 0; i < clearComputerBoard.length; i++) {
             if (clearComputerBoard[i].length == 3) clearComputerBoard[i].splice(2, 1)
         }
             
-        
         return [clearPlayerBoard, clearComputerBoard]
     }
             
