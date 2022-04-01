@@ -32,30 +32,6 @@ describe('GameBoards', () => {
         expect(ship.board[86]).toEqual([8, 6, {name: 'Patrol Boat', shot: false}])
     })
 
-    // test('Place AI ships', () => {
-    //     // const aiShips = [
-    //     //     {name: 'Carrier', length: 5}, 
-    //     //     {name: 'Battle Ship', length: 4}, 
-    //     //     {name: 'Destroyer', length: 3}, 
-    //     //     {name: 'Submarine', length: 3}, 
-    //     //     {name: 'Patrol Boat', length: 2}
-    //     // ]
-        
-    //     // for (let aiShip of aiShips) {
-    //     //     ship.placeComputerShips(aiShip.name, aiShip.length)
-    //     // }
-
-    //     // expect(ship.placeComputerShips()).toEqual(ship.board)
-
-    //     const direction = ['Horizonal', 'Vertical']
-    //     const randomView = Math.floor(Math.random() * direction.length)
-    //     const random = ship.board[Math.floor(Math.random() * ship.board.length)]
-
-    //     ship.placeShips('Carrier', 5, [random[0], random[1]], randomView)
-
-    //     expect(ship.board).toBe('FOOD')
-    // })
-
     test('Records missed attack', () => {
         ship.placeShips('Patrol Boat', 2, [1, 4], 'Vertical')
         

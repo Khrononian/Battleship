@@ -10,7 +10,6 @@ describe('Players', () => {
     test('Attack enemy', () => {
         player.computer.placeShips('Carrier', 5, [0, 4])
 
-        // expect(player.human.board[4]).toEqual([0, 4, {name: 'Carrier', shot: true}])
         expect(player.attackPlayer('Human', [0, 4])).toContainEqual([0, 4, {'name': 'Carrier', shot: true}])
     })
 
@@ -27,6 +26,5 @@ describe('Players', () => {
 
         expect(player.restartPlayers()[0][3]).toEqual([0, 3])
         expect(player.restartPlayers()[1][5]).toEqual([0, 5])
-        // expect(player.restartPlayers()).toEqual(player.restartPlayers('Computer'))
     })
 })
