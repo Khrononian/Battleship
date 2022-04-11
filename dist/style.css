@@ -9,15 +9,13 @@ h1 {
     font-size: 3rem;
 }
 
-body {
+html, body {
     min-height: 100vh;
-    /* height: 100%; */
     position: relative;
 }
 
 main {
     min-height: 100vh;
-    /* min-height: 100vh */
 }
 
 .contain {
@@ -74,9 +72,9 @@ h3 {
     display: flex;
     justify-content: center;
     align-items: center;
-    flex-direction: column;
-    min-height: 100vh;
-    height: 1100px;
+    /* flex-direction: column; */
+    /* min-height: 100vh;
+    height: 1100px; */
     background: #303030;
     opacity: .75;
     top: 0;
@@ -108,28 +106,15 @@ p {
 .ship-block {
     position: absolute;
     grid-template-columns: repeat(5, 1fr);
-    /* grid-template-rows: repeat(5, 1fr); */
-
     background: black;
-    /* width: 50%; */
     width: calc(100% - 50%);
-    /* width: 198px; */
     height: 36px;
-
-    /* height: 184px;
-    width: 39px; */
     pointer-events: none;
     visibility: hidden;
-
-
-    /* width: 29px;
-    height: 164px; */
 }
 
 .grid-styles {
     border-right: 1px solid silver;
-    /* border-bottom: 1px solid silver; */
-
 }
 
 .grid-vertical {
@@ -205,6 +190,10 @@ p {
 }
 
 @media screen and (max-width: 816px) {
+    .contain-ships {
+        height: 100%;
+    }
+
     .contain {
         justify-content: center;
     }
@@ -218,9 +207,13 @@ p {
         height: 330px;
     }
 
+    .allied-waters, .enemy-waters {
+        width: 240px;
+        height: 250px;
+    }
+
     .ship-block {
         width: 50%;
-        /* width: 148px; */
         height: 33px;
     }
 }
