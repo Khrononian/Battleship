@@ -9,7 +9,7 @@ const Player = () => {
         else return human.receiveAttack(coordinates)
     }
     
-    const restartPlayers = (player) => {
+    const restartPlayers = () => {
         let clearPlayerBoard = human.board;
         let clearComputerBoard = computer.board;
 
