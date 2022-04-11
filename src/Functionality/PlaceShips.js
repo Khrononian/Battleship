@@ -2,14 +2,15 @@ import { shipBlocks, rotateBtn, enemyWaters, allyWaters, shipZone } from './Dom'
 import Player from './Player'
 
 const player = Player();
-const shipArray = [
+const array = [];
+let shipArray = [
     {name: 'Carrier', length: 5},
     {name: 'Battle Ship', length: 4},
     {name: 'Destroyer', length: 3},
     {name: 'Submarine', length: 3},
     {name: 'Patrol Boat', length: 2}
 ]
-const shipCopy = []
+let shipCopy = []
 
 const clickShipPlacement = event => {
     let nextSibling = event.target.nextElementSibling
@@ -459,7 +460,7 @@ const placeComputerShips = () => {
                             enemyWaters.children[i].dataset.shot = false
                             
                             if (enemyWaters.children[i + 10] && enemyWaters.children[i + 10].dataset.column == random[1]) enemyWaters.children[i + 10].dataset.outer = 'Outer'
-                            if (enemyWaters.children[i + 1] ) enemyWaters.children[i + 1].dataset.outer = 'Outer'
+                            if (enemyWaters.children[i + 1]) enemyWaters.children[i + 1].dataset.outer = 'Outer'
                             if (enemyWaters.children[i - 1]) enemyWaters.children[i - 1].dataset.outer = 'Outer'
                             if (enemyWaters.children[i + 11]) enemyWaters.children[i + 11].dataset.outer = 'Outer'
                             if (enemyWaters.children[i + 9]) enemyWaters.children[i + 9].dataset.outer = 'Outer'
@@ -472,4 +473,4 @@ const placeComputerShips = () => {
     return player.computer.board
 }
 
-export { clickShipPlacement, placeComputerShips, player, shipArray, shipCopy }
+export { clickShipPlacement, player, shipArray, shipCopy, array }
