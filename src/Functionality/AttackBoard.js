@@ -9,7 +9,7 @@ const getGridPosition = (parent, index) => {
     const colCount = window.getComputedStyle(parent).gridTemplateColumns.split(' ').length;
     const rowPosition = Math.floor((index + offset) / colCount);
     const colPosition = (index + offset) % colCount;
-        
+    
     return { row: rowPosition, column: colPosition }
 }
 
@@ -23,14 +23,7 @@ const clickGridCell = (event) => {
     const enemyBoardCoordinates = getGridPosition(enemyWaters, getElementIndex(event.target));
    
     player.attackPlayer('Human', [enemyBoardCoordinates.row, enemyBoardCoordinates.column])
-    // player.attackPlayer('Computer', [allyBoardCoordinates.row, allyBoardCoordinates.column])
     randomSelectionCheck()
-    // player.attackPlayer('Computer', [allyBoardCoordinates.row, allyBoardCoordinates.column])
-    // console.log('LOOK COMPUTER ATTACK ALLY BOARD', player.human.board, player.human.shipAttacks, player.human.missedBlasts)
-
-    console.log('CHECK ARRAY', player.human.board, player.computer.board)
-    
-    console.log('SHIPPY', player.human.shipAttacks, player.computer.shipAttacks)
 
     if (event.target.dataset.ship) {
         event.target.style.pointerEvents = 'none'
@@ -43,18 +36,12 @@ const clickGridCell = (event) => {
         event.target.style.cursor = 'none'
     }
     if (player.human.checkShipConditions()) {
-        // alert('COMPUTER WON')
         document.querySelector('.winner').innerText = 'COMPUTER WON'
         document.querySelector('.restart-overlay').style.display = 'flex';
     } else if (player.computer.checkShipConditions()) {
-        // alert('HUMAN WON')
         document.querySelector('.winner').innerText = 'HUMAN WON'
         document.querySelector('.restart-overlay').style.display = 'flex';
     }
-        // console.log('AFTER', player.computer.board, player.human.board)
-        // console.log('WILLING', player.restartPlayers())
-    // console.log('ENEMY', enemyBoardCoordinates) // USE TO ATTACK ENEMY
-    // console.log('ALLY', allyBoardCoordinates) // USE FOR COMPUTER TO ATTACK
 }
 
 const randomSelectionCheck = () => { // ALLY TARGETS
