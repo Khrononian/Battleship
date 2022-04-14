@@ -28,7 +28,6 @@ const loadGridBlocks = () => {
         enemyDivs.style.cursor = 'pointer'
         shipZone.append(shipDivs)
         shipDivs.classList.add('grid-ships')
-        // shipBlocks.style.visibility = 'unset'
         shipZone.append(shipBlocks)
 
         enemyDivs.dataset.row = Number(getGridPosition(enemyWaters, getElementIndex(enemyDivs)).row);
