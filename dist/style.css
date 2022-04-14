@@ -189,6 +189,10 @@ p {
     transform: scale(1.1);
 }
 
+.block {
+    background: #3232;
+}
+
 @media screen and (max-width: 816px) {
     .contain-ships {
         height: 100%;
