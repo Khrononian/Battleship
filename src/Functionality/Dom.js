@@ -55,7 +55,6 @@ const rotateShip = event => {
                 shipBlocks.style.setProperty('height', 'calc(100% - 90%') + 'px'
                 shipBlocks.style.setProperty('width', 'calc(100% - 60%') + 'px'
                 shipBlocks.style.gridTemplateColumns = `repeat(4, 1fr)`
-                // shipBlocks.style.height = (shipBlocks.offsetHeight - 37) + 'px'
             } else if (shipArray[0].name == 'Destroyer') {
                 shipBlocks.style.gridTemplateColumns = `repeat(3, 1fr)`
                 shipBlocks.style.setProperty('height', 'calc(100% - 90%') + 'px'
@@ -64,7 +63,6 @@ const rotateShip = event => {
                 shipBlocks.style.gridTemplateColumns = `repeat(3, 1fr)`
                 shipBlocks.style.setProperty('height', 'calc(100% - 90%') + 'px'
                 shipBlocks.style.setProperty('width', 'calc(100% - 70%') + 'px'
-                // shipBlocks.style.height = (shipBlocks.offsetHeight - 37) + 'px'
             } else if (shipArray[0].name == 'Patrol Boat') {
                 shipBlocks.style.gridTemplateColumns = `repeat(2, 1fr)`
                 shipBlocks.style.setProperty('height', 'calc(100% - 90%') + 'px'
@@ -85,7 +83,7 @@ const hoverShipPlacements = event => {
     
     if (rotateBtn.id == 'Horizontal') {
         for (let i = 0; i < shipBlocks.children.length; i++) {
-            while (upper != shipArray[0].length && nextInnerGridCell) { // CHANGE THIS TO A UNIVERSAL SHIP LENGTH
+            while (upper != shipArray[0].length && nextInnerGridCell) { 
                 if (shipBlocks.children[upper] && event.target.dataset.row == nextInnerGridCell.dataset.row ) shipBlocks.children[upper].dataset.column = nextInnerGridCell.dataset.column - 1 
                 else if (shipBlocks.lastElementChild.previousElementSibling.dataset.column == 8) shipBlocks.lastElementChild.dataset.column = 9;
 
@@ -100,19 +98,16 @@ const hoverShipPlacements = event => {
         for (let i = 0; i < shipBlocks.children.length; i++) {
             
             while (upper != shipArray[0].length ) {
-                // shipBlocks.children[upper].dataset.row = event.target.dataset.row
                 if (!shipBlocks.children[upper].dataset.row) shipBlocks.children[upper].dataset.row = Number(event.target.dataset.row) + upper
                 else shipBlocks.children[upper].dataset.row = Number(event.target.dataset.row) + upper
                 if (shipBlocks.children[upper] && event.target.dataset.column == shipBlocks.children[upper].dataset.column
                 ) shipBlocks.children[upper].dataset.row = Number(event.target.dataset.row ) + upper
-                // else if (shipBlocks.lastElementChild.previousElementSibling.dataset.row == 8) shipBlocks.lastElementChild.dataset.row = 9
 
                 upper++
             }
             if (!shipBlocks.children[i].dataset.column) shipBlocks.children[i].dataset.column = event.target.dataset.column
             else shipBlocks.children[i].dataset.column = event.target.dataset.column
             if (shipBlocks.children[0].dataset.row && event.target.dataset.column == shipBlocks.children[i].dataset.column) shipBlocks.children[0].dataset.row = event.target.dataset.row
-            // if (shipBlocks.children[i].dataset.row && event.target.dataset.column == shipBlocks.children[i].dataset.column) shipBlocks.children[i].dataset.row = event.target.dataset.row
         }
     }
 }
@@ -122,7 +117,7 @@ const hoverOutShipPlacements = () => {
 }
 
 const hoverGridCell = (event) => {
-    event.target.style.background = '#3232';
+    event.target.classList.toggle('block')
 }
 
 const restartBoard = event => {
@@ -135,13 +130,12 @@ const restartBoard = event => {
     document.querySelector('header').style.filter = 'blur(4px)';
     
     shipCopy.map(ship => shipArray.push(ship))
-    console.log('ARRAY', shipArray, shipCopy)
     shipBlocks.style.gridTemplateColumns = 'repeat(5, 1fr)';
     shipBlocks.style.width = '198px';
     shipBlocks.style.height = '36px';
     shipBlocks.style.gridTemplateRows = 'none';
     rotateBtn.id = 'Horizontal'
-    // shipBlocks.children[1].style.borderRight = '1px solid silver';
+
     if (shipBlocks.children[0].classList.contains('grid-vertical') && shipBlocks.children[1].classList.contains('grid-vertical')) {
         shipBlocks.children[0].classList.toggle('grid-vertical')
         shipBlocks.children[0].classList.toggle('grid-styles')
@@ -154,7 +148,6 @@ const restartBoard = event => {
     player.human.missedBlasts.length = 0;
     player.computer.shipAttacks.length = 0;
     player.computer.missedBlasts.length = 0;
-    console.log('AFTER ARRAY', shipCopy)
 
     for (let i = 0; i < 3; i++) {
         const createDiv = document.createElement('div');
@@ -194,8 +187,7 @@ const clearBoard = () => {
 }
 
 const hoverOutGridCell = (event) => {
-    if (event.target.dataset.ship) return
-    else event.target.style.background = 'transparent'
+    event.target.classList.toggle('block')
 }
 
 export { 
